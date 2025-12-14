@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorium Lingkungan Dinas Lingkungan Hidup Kabupaten Grobogan</title>
-    <link rel="icon" type="image/jpg" href="{{ asset('images/logo.jpg') }}">
+    <link rel="icon" type="image/jpg" href="{{ secure_asset('images/logo.jpg') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <!-- Bootstrap CSS -->
