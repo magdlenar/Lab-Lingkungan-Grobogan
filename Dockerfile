@@ -12,13 +12,5 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
-# 🔽 IMPORT DATABASE (SEKALI SAJA)
-RUN mysql \
-  -h "$MYSQLHOST" \
-  -P "$MYSQLPORT" \
-  -u "$MYSQLUSER" \
-  -p"$MYSQLPASSWORD" \
-  "$MYSQLDATABASE" < aplikasi_lab.sql
-
 EXPOSE 8080
 CMD php -S 0.0.0.0:$PORT -t public server.php
