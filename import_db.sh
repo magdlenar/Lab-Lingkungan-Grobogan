@@ -1,8 +1,7 @@
 #!/bin/sh
 set -e
 
-# MySQL client kamu tidak support --ssl-mode, jadi pakai opsi SSL lama yang kompatibel
-MYSQL_OPTS="--ssl=1 --ssl-verify-server-cert=0"
+MYSQL_OPTS="--protocol=tcp --ssl=0"
 
 echo "MYSQLHOST=$MYSQLHOST"
 echo "MYSQLPORT=$MYSQLPORT"
