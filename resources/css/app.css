@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import "../sass/app.scss";
-
+@import "bootstrap/scss/bootstrap";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
