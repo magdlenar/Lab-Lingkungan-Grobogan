@@ -37,9 +37,11 @@ class GaleriController extends Controller
 
         $path = null;
         if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('galeri', 'public');
+            $file = $request->file('gambar');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('storage/galeri'), $filename);
+            $g->gambar = 'galeri/'.$filename;
         }
-
         Galeri::create([
             'judul' => $request->judul,
             'gambar' => $path,
