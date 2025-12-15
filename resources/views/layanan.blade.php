@@ -161,7 +161,7 @@
     <div class="text-center mb-4">
       <h3 class="fw-bold" style="color:#189e1e">Dokumen SOP Laboratorium</h3>
       <p class="text-muted" style="max-width: 850px; margin:0 auto;">
-        Dokumen SOP dan SK SOP dapat dilihat melalui modal dan diunduh.
+        Dokumen <i>Standard Operating Procedure</i>
       </p>
     </div>
 
