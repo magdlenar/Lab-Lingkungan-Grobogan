@@ -21,6 +21,7 @@ class TestRequest extends Model
         'status',
         'fix_fields',
         'sample_pickup_date',
+        'pickup_letter_file',
     ];
 
     // RELASI KE USER
