@@ -11,8 +11,13 @@ class Iku extends Model
 
     protected $fillable = [
         'kabupaten_kota',
-        'rataan_no2','rataan_so2',
-        'indeks_no2','indeks_so2',
-        'rataan_indeks','nilai_iku','target_iku'
+        'tanggal',          
+        'rataan_no2',
+        'rataan_so2',
+        'indeks_no2',
+        'indeks_so2',
+        'rataan_indeks',
+        'nilai_iku',
+        'target_iku',
     ];
 }
