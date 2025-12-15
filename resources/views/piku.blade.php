@@ -229,7 +229,7 @@ td.col-meta{color:#334155;}
           <tr class="group">
             <th rowspan="3" style="width:60px;">No</th>
             <th rowspan="3">Kabupaten / Kota</th>
-
+            <th rowspan="3" class="text-center">Tanggal</th>
             <th colspan="5" class="text-center">Perhitungan Indeks</th>
 
             <th rowspan="3" class="text-center">Nilai IKU</th>
@@ -268,6 +268,9 @@ td.col-meta{color:#334155;}
 
             <td data-label="Kab/Kota" class="col-kab">
               {{ $i->kabupaten_kota }}
+            </td>
+            <td data-label="Tanggal" class="col-meta">
+              {{ $i->tanggal ? \Carbon\Carbon::parse($i->tanggal)->format('d-m-Y') : '-' }}
             </td>
 
             {{-- Perhitungan Indeks (HIDE di mobile) --}}
