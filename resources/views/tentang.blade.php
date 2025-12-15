@@ -449,170 +449,196 @@
   </div>
 </section>
 
-{{-- STRUKTUR ORGANISASI --}}
-<section class="py-5" style="background-color:#e9f7ef;">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-2" style="color:#189e1e">Struktur Organisasi</h2>
-    <p class="text-muted mb-4">Bagan struktur organisasi Laboratorium Lingkungan.</p>
+    {{-- STRUKTUR ORGANISASI --}}
+    <section class="py-5" style="background-color:#e9f7ef;">
+      <div class="container text-center">
+        <h2 class="fw-bold mb-2" style="color:#189e1e">Struktur Organisasi</h2>
+        <p class="text-muted mb-4">Bagan struktur organisasi Laboratorium Lingkungan.</p>
 
-    @php
-      $top = $items->first();
+        @php
+          $top = $items->whereNull('parent_id')->sortBy('urutan')->first();
 
-      $lvl2 = $top?->children->keyBy('jabatan');
-      $mutu   = $lvl2['Manajer Mutu'] ?? null;
-      $teknis = $lvl2['Manajer Teknis'] ?? null;
-      $admin  = $lvl2['Manajer Administrasi'] ?? null;
+          $lvl2 = $top?->children?->keyBy('jabatan') ?? collect();
+          $mutu   = $lvl2['Manajer Mutu'] ?? null;
+          $teknis = $lvl2['Manajer Teknis'] ?? null;
+          $admin  = $lvl2['Manajer Administrasi'] ?? null;
 
-      $stafMutu = $mutu?->children->firstWhere('jabatan','Staf Mutu');
+          // ✅ jadikan LIST
+          $stafMutuList = $mutu?->children?->where('jabatan','Staf Mutu')->sortBy('urutan')->values() ?? collect();
 
-      $penyelia = $teknis?->children->firstWhere('jabatan','Penyelia');
-      $k3l      = $teknis?->children->firstWhere('jabatan','Petugas K3L');
+          $penyelia = $teknis?->children?->firstWhere('jabatan','Penyelia');
 
-      $stafAdmin  = $admin?->children->firstWhere('jabatan','Staf Administrasi');
-      $penerimaCU = $admin?->children->where('jabatan','Penerima Contoh Uji') ?? collect();
+          // ✅ jadikan LIST
+          $k3lList  = $teknis?->children?->where('jabatan','Petugas K3L')->sortBy('urutan')->values() ?? collect();
 
-      $analis   = $penyelia?->children->firstWhere('jabatan','Analis');
-      $sampling = $penyelia?->children->firstWhere('jabatan','Petugas Sampling');
-    @endphp
+          $stafAdmin  = $admin?->children?->firstWhere('jabatan','Staf Administrasi');
+          $penerimaCU = $admin?->children?->where('jabatan','Penerima Contoh Uji')->sortBy('urutan')->values() ?? collect();
 
-    @if($top)
-      <div class="org-wrap">
-        <div class="org">
+          // ✅ ambil SEMUA (LIST)
+          $analisList   = $penyelia?->children?->where('jabatan','Analis')->sortBy('urutan')->values() ?? collect();
+          $samplingList = $penyelia?->children?->where('jabatan','Petugas Sampling')->sortBy('urutan')->values() ?? collect();
+        @endphp
 
-          {{-- LEVEL 1 --}}
-          <div class="lvl1">
-            <div class="node lg">
-              <img class="ava" src="{{ $top->foto ? asset('storage/'.$top->foto) : asset('images/default-user.png') }}" alt="foto">
-              <div class="role">{{ $top->jabatan }}</div>
-              <div class="name">{{ $top->nama }}</div>
-            </div>
-          </div>
+        @if($top)
+          <div class="org-wrap">
+            <div class="org">
 
-          {{-- LEVEL 2 (3 manajer) --}}
-          <div class="lvl2">
-
-            {{-- MUTU --}}
-            <div class="col col-mutu">
-              @if($mutu)
+              {{-- LEVEL 1 --}}
+              <div class="lvl1">
                 <div class="node lg">
-                  <img class="ava" src="{{ $mutu->foto ? asset('storage/'.$mutu->foto) : asset('images/default-user.png') }}" alt="foto">
-                  <div class="role">{{ $mutu->jabatan }}</div>
-                  <div class="name">{{ $mutu->nama }}</div>
+                  <img class="ava" src="{{ $top->foto ? asset('storage/'.$top->foto) : asset('images/default-user.png') }}" alt="foto">
+                  <div class="role">{{ $top->jabatan }}</div>
+                  <div class="name">{{ $top->nama }}</div>
                 </div>
-              @endif
-
-              @if($stafMutu)
-                <div class="node sm">
-                  <img class="ava" src="{{ $stafMutu->foto ? asset('storage/'.$stafMutu->foto) : asset('images/default-user.png') }}" alt="foto">
-                  <div class="role">{{ $stafMutu->jabatan }}</div>
-                  <div class="name">{{ $stafMutu->nama }}</div>
-                </div>
-              @endif
-            </div>
-
-            {{-- TEKNIS --}}
-            <div class="col has-split">
-              @if($teknis)
-                <div class="node lg">
-                  <img class="ava" src="{{ $teknis->foto ? asset('storage/'.$teknis->foto) : asset('images/default-user.png') }}" alt="foto">
-                  <div class="role">{{ $teknis->jabatan }}</div>
-                  <div class="name">{{ $teknis->nama }}</div>
-                </div>
-              @endif
-
-              <div class="row-split">
-                {{-- Penyelia + sub --}}
-                @if($penyelia)
-                  <div class="child">
-                    <div class="branch {{ ($analis || $sampling) ? 'has-sub' : '' }}">
-                      <div class="node sm">
-                        <img class="ava" src="{{ $penyelia->foto ? asset('storage/'.$penyelia->foto) : asset('images/default-user.png') }}" alt="foto">
-                        <div class="role">{{ $penyelia->jabatan }}</div>
-                        <div class="name">{{ $penyelia->nama }}</div>
-                      </div>
-
-                      @if($analis || $sampling)
-                        <div class="sub-split">
-                          @if($analis)
-                            <div class="node sm">
-                              <img class="ava" src="{{ $analis->foto ? asset('storage/'.$analis->foto) : asset('images/default-user.png') }}" alt="foto">
-                              <div class="role">{{ $analis->jabatan }}</div>
-                              <div class="name">{{ $analis->nama }}</div>
-                            </div>
-                          @endif
-
-                          @if($sampling)
-                            <div class="node sm">
-                              <img class="ava" src="{{ $sampling->foto ? asset('storage/'.$sampling->foto) : asset('images/default-user.png') }}" alt="foto">
-                              <div class="role">{{ $sampling->jabatan }}</div>
-                              <div class="name">{{ $sampling->nama }}</div>
-                            </div>
-                          @endif
-                        </div>
-                      @endif
-                    </div>
-                  </div>
-                @endif
-
-                {{-- K3L --}}
-                @if($k3l)
-                  <div class="child">
-                    <div class="node sm">
-                      <img class="ava" src="{{ $k3l->foto ? asset('storage/'.$k3l->foto) : asset('images/default-user.png') }}" alt="foto">
-                      <div class="role">{{ $k3l->jabatan }}</div>
-                      <div class="name">{{ $k3l->nama }}</div>
-                    </div>
-                  </div>
-                @endif
               </div>
-            </div>
 
-            {{-- ADMINISTRASI --}}
-            <div class="col has-split">
-              @if($admin)
-                <div class="node lg">
-                  <img class="ava" src="{{ $admin->foto ? asset('storage/'.$admin->foto) : asset('images/default-user.png') }}" alt="foto">
-                  <div class="role">{{ $admin->jabatan }}</div>
-                  <div class="name">{{ $admin->nama }}</div>
-                </div>
-              @endif
+              {{-- LEVEL 2 --}}
+              <div class="lvl2">
 
-              <div class="row-split">
-                {{-- Penerima Contoh Uji --}}
-                @if($penerimaCU->count())
-                  <div class="child">
+                {{-- MUTU --}}
+                <div class="col col-mutu">
+                  @if($mutu)
+                    <div class="node lg">
+                      <img class="ava" src="{{ $mutu->foto ? asset('storage/'.$mutu->foto) : asset('images/default-user.png') }}" alt="foto">
+                      <div class="role">{{ $mutu->jabatan }}</div>
+                      <div class="name">{{ $mutu->nama }}</div>
+                    </div>
+                  @endif
+
+                  {{-- ✅ Staf Mutu bisa lebih dari 1 --}}
+                  @if($stafMutuList->count())
                     <div class="node sm">
                       <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
-                      <div class="role">Penerima Contoh Uji</div>
+                      <div class="role">Staf Mutu</div>
                       <div class="namelist">
-                        @foreach($penerimaCU as $p)
-                          <div class="name">{{ $p->nama }}</div>
+                        @foreach($stafMutuList as $sm)
+                          <div class="name">{{ $sm->nama }}</div>
                         @endforeach
                       </div>
                     </div>
-                  </div>
-                @endif
+                  @endif
+                </div>
 
-                {{-- Staf Administrasi --}}
-                @if($stafAdmin)
-                  <div class="child">
-                    <div class="node sm">
-                      <img class="ava" src="{{ $stafAdmin->foto ? asset('storage/'.$stafAdmin->foto) : asset('images/default-user.png') }}" alt="foto">
-                      <div class="role">{{ $stafAdmin->jabatan }}</div>
-                      <div class="name">{{ $stafAdmin->nama }}</div>
+                {{-- TEKNIS --}}
+                <div class="col has-split">
+                  @if($teknis)
+                    <div class="node lg">
+                      <img class="ava" src="{{ $teknis->foto ? asset('storage/'.$teknis->foto) : asset('images/default-user.png') }}" alt="foto">
+                      <div class="role">{{ $teknis->jabatan }}</div>
+                      <div class="name">{{ $teknis->nama }}</div>
                     </div>
+                  @endif
+
+                  <div class="row-split">
+
+                    {{-- Penyelia + sub --}}
+                    @if($penyelia)
+                      <div class="child">
+                        <div class="branch {{ ($analisList->count() || $samplingList->count()) ? 'has-sub' : '' }}">
+
+                          <div class="node sm">
+                            <img class="ava" src="{{ $penyelia->foto ? asset('storage/'.$penyelia->foto) : asset('images/default-user.png') }}" alt="foto">
+                            <div class="role">{{ $penyelia->jabatan }}</div>
+                            <div class="name">{{ $penyelia->nama }}</div>
+                          </div>
+
+                          @if($analisList->count() || $samplingList->count())
+                            <div class="sub-split">
+
+                              @if($analisList->count())
+                                <div class="node sm">
+                                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                                  <div class="role">Analis</div>
+                                  <div class="namelist">
+                                    @foreach($analisList as $a)
+                                      <div class="name">{{ $a->nama }}</div>
+                                    @endforeach
+                                  </div>
+                                </div>
+                              @endif
+
+                              @if($samplingList->count())
+                                <div class="node sm">
+                                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                                  <div class="role">Petugas Sampling</div>
+                                  <div class="namelist">
+                                    @foreach($samplingList as $s)
+                                      <div class="name">{{ $s->nama }}</div>
+                                    @endforeach
+                                  </div>
+                                </div>
+                              @endif
+
+                            </div>
+                          @endif
+
+                        </div>
+                      </div>
+                    @endif
+
+                    {{-- ✅ K3L bisa lebih dari 1 --}}
+                    @if($k3lList->count())
+                      <div class="child">
+                        <div class="node sm">
+                          <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                          <div class="role">Petugas K3L</div>
+                          <div class="namelist">
+                            @foreach($k3lList as $k)
+                              <div class="name">{{ $k->nama }}</div>
+                            @endforeach
+                          </div>
+                        </div>
+                      </div>
+                    @endif
+
                   </div>
-                @endif
+                </div>
+
+                {{-- ADMINISTRASI --}}
+                <div class="col has-split">
+                  @if($admin)
+                    <div class="node lg">
+                      <img class="ava" src="{{ $admin->foto ? asset('storage/'.$admin->foto) : asset('images/default-user.png') }}" alt="foto">
+                      <div class="role">{{ $admin->jabatan }}</div>
+                      <div class="name">{{ $admin->nama }}</div>
+                    </div>
+                  @endif
+
+                  <div class="row-split">
+                    @if($penerimaCU->count())
+                      <div class="child">
+                        <div class="node sm">
+                          <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                          <div class="role">Penerima Contoh Uji</div>
+                          <div class="namelist">
+                            @foreach($penerimaCU as $p)
+                              <div class="name">{{ $p->nama }}</div>
+                            @endforeach
+                          </div>
+                        </div>
+                      </div>
+                    @endif
+
+                    @if($stafAdmin)
+                      <div class="child">
+                        <div class="node sm">
+                          <img class="ava" src="{{ $stafAdmin->foto ? asset('storage/'.$stafAdmin->foto) : asset('images/default-user.png') }}" alt="foto">
+                          <div class="role">{{ $stafAdmin->jabatan }}</div>
+                          <div class="name">{{ $stafAdmin->nama }}</div>
+                        </div>
+                      </div>
+                    @endif
+                  </div>
+                </div>
+
               </div>
             </div>
-
           </div>
-        </div>
-      </div>
-    @endif
+        @endif
 
-  </div>
-</section>
+      </div>
+    </section>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
