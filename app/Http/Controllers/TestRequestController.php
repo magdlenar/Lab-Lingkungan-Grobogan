@@ -95,5 +95,24 @@ class TestRequestController extends Controller
         return redirect()->route('uji.status')
             ->with('success', 'Data permintaan berhasil diperbarui dan dikirim ulang.');
     }
+    public function downloadPickupLetterCustomer($id)
+    {
+        $req = TestRequest::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        if (!$req->pickup_letter_file) {
+            abort(404, "Surat pengambilan sampel belum tersedia.");
+        }
+
+        $filePath = storage_path('app/public/' . $req->pickup_letter_file);
+
+        if (!file_exists($filePath)) {
+            abort(404, "File tidak ditemukan di server.");
+        }
+
+        return response()->download($filePath);
+    }
+
 
 }
