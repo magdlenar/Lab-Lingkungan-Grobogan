@@ -8,8 +8,8 @@
         'pemeriksaan kelengkapan',
         'persyaratan tidak lengkap',
         'persyaratan lengkap',
-        'jadwal pengambilan sampel',
         'pengambilan sampel',
+        'sedang dilakukan analisis',
         'uji selesai',
         'verifikasi hasil uji',
         'penerbitan lhu'
@@ -290,8 +290,8 @@
                                                 'pemeriksaan kelengkapan' => 'primary',
                                                 'persyaratan tidak lengkap' => 'danger',
                                                 'persyaratan lengkap' => 'success',
-                                                'jadwal pengambilan sampel' => 'info',
                                                 'pengambilan sampel' => 'info',
+                                                'sedang dilakukan analisis' => 'info',
                                                 'uji selesai' => 'secondary',
                                                 'verifikasi hasil uji' => 'warning',
                                                 'penerbitan lhu' => 'dark',
@@ -302,7 +302,7 @@
                                             {{ $req->status }}
                                         </span>
 
-                                        @if(in_array($req->status, ['jadwal pengambilan sampel', 'pengambilan sampel']) && $req->sample_pickup_date)
+                                        @if(in_array($req->status, ['pengambilan sampel']) && $req->sample_pickup_date)
                                             <div class="mt-2">
                                                 <span class="badge bg-info text-dark badge-soft">
                                                     <i class="bi bi-calendar2-week me-1"></i>
@@ -500,8 +500,8 @@
                                     'pemeriksaan kelengkapan' => 'primary',
                                     'persyaratan tidak lengkap' => 'danger',
                                     'persyaratan lengkap' => 'success',
-                                    'jadwal pengambilan sampel' => 'info',
                                     'pengambilan sampel' => 'info',
+                                    'sedang dilakukan analisis' => 'info',
                                     'uji selesai' => 'secondary',
                                     'verifikasi hasil uji' => 'warning',
                                     'penerbitan lhu' => 'dark',
