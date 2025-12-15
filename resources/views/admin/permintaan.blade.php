@@ -658,7 +658,7 @@
                 <div class="modal fade" id="modalStatus{{ $item->id }}" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="{{ route('admin.uji.status', $item->id) }}" method="POST">
+                            <form action="{{ route('admin.uji.status', $item->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -726,13 +726,23 @@
                                     </div>
 
                                     {{-- ✅ FIELD TANGGAL PENGAMBILAN --}}
-                                    <div id="tanggalPengambilan{{ $item->id }}"
-                                        class="mt-3 d-none">
+                                    <div id="tanggalPengambilan{{ $item->id }}" class="mt-3 d-none">
                                         <label class="form-label fw-bold">Tanggal Pengambilan Sampel</label>
                                         <input type="date"
                                             name="sample_pickup_date"
                                             class="form-control"
                                             value="{{ $item->sample_pickup_date }}">
+
+                                        <div class="mt-3">
+                                            <label class="form-label fw-bold">Upload Surat Pengambilan Sampel</label>
+                                            <input type="file" name="pickup_letter_file" class="form-control" accept=".pdf,.jpg,.png">
+                                            @if($item->pickup_letter_file)
+                                                <small class="text-muted d-block mt-1">
+                                                    File saat ini:
+                                                    <a href="{{ route('pickup_letter.download', $item->id) }}">Download</a>
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
 
                                     <div class="mt-3">
