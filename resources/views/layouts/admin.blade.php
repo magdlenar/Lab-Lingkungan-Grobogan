@@ -65,6 +65,32 @@ body {
     overflow-x: hidden;
     overscroll-behavior: contain;
 }
+/* submenu button biar mirip link */
+.sidebar-sub-btn{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--grey-text);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    transition: .25s ease;
+}
+.sidebar-sub-btn i{
+    width: 22px;
+    font-size: 18px;
+    margin-right: 8px;
+    color: var(--green-dark);
+}
+.sidebar-sub-btn:hover{
+    background: var(--green-soft);
+    color: var(--green-dark);
+}
+
 
 .sidebar::-webkit-scrollbar {
     width: 6px;
@@ -337,7 +363,11 @@ body {
     <div class="menu-title">Manajemen Umum</div>
 
     @php
-        $publikasiOpen = request()->is('admin/ika*') || request()->is('admin/iku*');
+    $publikasiOpen = request()->is('admin/ika*') || request()->is('admin/iku*');
+    @endphp
+    @php
+    use App\Models\LabDocument;
+    $labDoc = LabDocument::first();
     @endphp
 
     <a href="#publikasiMenu"
@@ -347,7 +377,7 @@ body {
        aria-expanded="{{ $publikasiOpen ? 'true' : 'false' }}"
        aria-controls="publikasiMenu">
         <i class="bi bi-journal-text"></i>
-        <span>Publikasi IKA & IKU</span>
+        <span>Publikasi</span>
         <i class="bi bi-caret-down-fill ms-auto small"
            style="color:#94a3b8; font-size:12px;"></i>
     </a>
@@ -364,6 +394,12 @@ body {
                style="font-size:14px; padding:10px 14px; border-radius:9px;">
                 <i class="bi bi-cloud-haze2"></i> Input IKU
             </a>
+            <button type="button"
+                    class="sidebar-sub-btn {{ request()->is('admin/dashboard') ? '' : '' }}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalDokumenSOP">
+                <i class="bi bi-folder2-open"></i> Kelola Dokumen SOP
+            </button>
         </div>
     </div>
 
@@ -400,7 +436,96 @@ body {
 </div>
 
 </div>
+{{-- ================= MODAL DOKUMEN SOP LAB (GLOBAL ADMIN) ================= --}}
+<div class="modal fade" id="modalDokumenSOP" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:18px;">
 
+      <div class="modal-header" style="background: linear-gradient(90deg, #14891c, #1fb726); color:#fff;">
+        <h5 class="modal-title fw-semibold">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          Kelola Dokumen SOP
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" style="background:#f8fbf8;">
+        <form action="{{ route('admin.dokumenlab.update') }}"
+              method="POST"
+              enctype="multipart/form-data">
+          @csrf
+
+          <div class="row g-3">
+
+            {{-- SOP --}}
+            <div class="col-md-6">
+              <div class="p-3 bg-white border rounded-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <i class="bi bi-file-earmark-text fs-4" style="color:#14891c;"></i>
+                  <div class="fw-bold" style="color:#14891c;">SOP Laboratorium</div>
+                </div>
+
+                <input type="file" name="sop_file" class="form-control" accept=".pdf,.jpg,.png">
+
+                @if(!empty($labDoc?->sop_file))
+                  <div class="mt-2 small d-flex justify-content-between align-items-center">
+                    <span class="text-muted">
+                      <i class="bi bi-check-circle-fill text-success me-1"></i> Sudah ada
+                    </span>
+                    <a href="{{ route('dokumenlab.download','sop') }}" target="_blank"
+                       class="fw-semibold" style="color:#14891c;">
+                      Download
+                    </a>
+                  </div>
+                @else
+                  <div class="text-muted small mt-2">Belum ada file SOP.</div>
+                @endif
+              </div>
+            </div>
+
+            {{-- SK SOP --}}
+            <div class="col-md-6">
+              <div class="p-3 bg-white border rounded-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <i class="bi bi-file-earmark-check fs-4" style="color:#14891c;"></i>
+                  <div class="fw-bold" style="color:#14891c;">SK SOP</div>
+                </div>
+
+                <input type="file" name="sk_sop_file" class="form-control" accept=".pdf,.jpg,.png">
+
+                @if(!empty($labDoc?->sk_sop_file))
+                  <div class="mt-2 small d-flex justify-content-between align-items-center">
+                    <span class="text-muted">
+                      <i class="bi bi-check-circle-fill text-success me-1"></i> Sudah ada
+                    </span>
+                    <a href="{{ route('dokumenlab.download','sk') }}" target="_blank"
+                       class="fw-semibold" style="color:#14891c;">
+                      Download
+                    </a>
+                  </div>
+                @else
+                  <div class="text-muted small mt-2">Belum ada file SK SOP.</div>
+                @endif
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mt-4 d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="border-radius:12px;">
+              Batal
+            </button>
+            <button class="btn btn-success fw-bold" style="border-radius:12px;">
+              <i class="bi bi-cloud-arrow-up me-1"></i> Simpan
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
 
     <!-- CONTENT -->
     <div class="content">
