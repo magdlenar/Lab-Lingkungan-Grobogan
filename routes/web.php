@@ -21,7 +21,21 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index']);
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
-Route::view('/layanan', 'layanan');
+Route::get('/layanan', [HomeController::class, 'layanan'])->name('layanan');
+Route::get('/dokumen-lab/{type}/download', function ($type) {
+    $doc = \App\Models\LabDocument::firstOrFail();
+
+    $file = null;
+    if ($type === 'sop') $file = $doc->sop_file;
+    if ($type === 'sk')  $file = $doc->sk_sop_file;
+
+    if (!$file) abort(404, 'File belum tersedia.');
+
+    $path = storage_path('app/public/' . $file);
+    if (!file_exists($path)) abort(404, 'File tidak ditemukan di server.');
+
+    return response()->download($path);
+})->name('dokumenlab.download');
 
 // ================= GUEST =====================
 Route::middleware('guest')->group(function () {
@@ -64,6 +78,9 @@ Route::prefix('admin')
 
         // DASHBOARD
         Route::get('/dashboard', [UjiController::class, 'dashboard'])->name('admin.dashboard');
+        Route::post('/dokumen-lab/update', [UjiController::class, 'updateLabDocuments'])
+        ->name('admin.dokumenlab.update');
+
 
         // AKUN
         Route::get('/akun', [UserController::class, 'index'])->name('admin.akun');
