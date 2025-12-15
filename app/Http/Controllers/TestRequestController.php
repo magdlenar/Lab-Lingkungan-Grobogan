@@ -21,7 +21,7 @@ class TestRequestController extends Controller
             'pic_email' => 'required|email',
             'sample_address' => 'required',
             'service_type' => 'required',
-            'letter_file' => 'required|mimes:pdf,jpg,png|max:2048'
+            'letter_file' => 'required|mimes:pdf,jpg,png|max:6144'
         ]);
 
         $file = $request->file('letter_file')->store('permohonan', 'public');
@@ -66,7 +66,7 @@ class TestRequestController extends Controller
             'pic_email' => 'required|email',
             'sample_address' => 'required',
             'notes' => 'nullable|string',
-            'letter_file' => 'nullable|mimes:pdf,jpg,png|max:2048'
+            'letter_file' => 'nullable|mimes:pdf,jpg,png|max:6144'
         ]);
 
         // update field utama
