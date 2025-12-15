@@ -207,29 +207,54 @@ class UjiController extends Controller
     {
         $req = TestRequest::findOrFail($id);
 
+        // update status
         $req->status = $request->status;
 
+        // catatan
         if ($request->filled('notes')) {
             $req->notes = $request->notes;
         }
 
+        // ================= PERBAIKAN DATA =================
         if ($request->status === 'persyaratan tidak lengkap') {
             $req->fix_fields = json_encode($request->fix_fields ?? []);
         } else {
             $req->fix_fields = null;
         }
 
-        // TANGGAL JADWAL PENGAMBILAN SAMPEL
-        if ($request->status === 'jadwal pengambilan sampel' && $request->filled('sample_pickup_date')) {
-            $req->sample_pickup_date = $request->sample_pickup_date;
+        // ================= PENGAMBILAN SAMPEL =================
+        if ($request->status === 'pengambilan sampel') {
+
+            // tanggal pengambilan
+            if ($request->filled('sample_pickup_date')) {
+                $req->sample_pickup_date = $request->sample_pickup_date;
+            }
+
+            // upload surat pengambilan sampel
+            if ($request->hasFile('pickup_letter_file')) {
+
+                $request->validate([
+                    'pickup_letter_file' => 'mimes:pdf,jpg,png|max:5120' // 5 MB
+                ]);
+
+                // hapus file lama jika ada
+                if ($req->pickup_letter_file && Storage::disk('public')->exists($req->pickup_letter_file)) {
+                    Storage::disk('public')->delete($req->pickup_letter_file);
+                }
+
+                // simpan file baru
+                $req->pickup_letter_file = $request->file('pickup_letter_file')
+                    ->store('pickup_letters', 'public');
+            }
         }
 
+        // ================= SIMPAN =================
         $req->save();
 
         return back()->with('success', 'Status berhasil diperbarui.');
     }
 
-    // ============= HAPUS DATA =================
+        // ============= HAPUS DATA =================
     public function destroy($id)
     {
         $uji = TestRequest::findOrFail($id);
@@ -280,4 +305,21 @@ public function downloadHasilUji($id)
 
     return response()->download($filePath);
 }
+public function downloadPickupLetter($id)
+{
+    $req = TestRequest::findOrFail($id);
+
+    if (!$req->pickup_letter_file) {
+        abort(404, "File tidak ditemukan.");
+    }
+
+    $path = storage_path("app/public/" . $req->pickup_letter_file);
+
+    if (!file_exists($path)) {
+        abort(404, "File tidak ditemukan di server.");
+    }
+
+    return response()->download($path);
+}
+
 }
