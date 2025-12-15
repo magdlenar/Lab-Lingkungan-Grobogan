@@ -319,26 +319,53 @@
                 </div>
                 <div class="modal-body">
                   <div class="row g-3">
-                    <div class="col-md-6">
-                      <label class="form-label fw-semibold">Jabatan</label>
-                      <select name="jabatan" class="form-select" required>
-                        @foreach([
-                        'Manajer Puncak',
-                        'Manajer Mutu',
-                        'Manajer Teknis',
-                        'Manajer Administrasi',
-                        'Staf Mutu',
-                        'Penyelia',
-                        'Petugas K3L',
-                        'Penerima Contoh Uji',
-                        'Staf Administrasi',
-                        'Analis',
-                        'Petugas Sampling',
-                      ] as $j)
-                        <option value="{{ $j }}" @selected($i->jabatan==$j)>{{ $j }}</option>
+                   @php
+                    $jabatanOptions = [
+                      'Manajer Puncak',
+                      'Manajer Mutu',
+                      'Manajer Teknis',
+                      'Manajer Administrasi',
+                      'Staf Mutu',
+                      'Penyelia',
+                      'Petugas K3L',
+                      'Penerima Contoh Uji',
+                      'Staf Administrasi',
+                      'Analis',
+                      'Petugas Sampling',
+                    ];
+
+                    $isCustomEdit = !in_array($i->jabatan, $jabatanOptions, true);
+                  @endphp
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Jabatan</label>
+
+                    <select name="jabatan_select"
+                            id="jabatanSelectEdit{{ $i->id }}"
+                            class="form-select"
+                            required
+                            onchange="toggleJabatanManualEdit('{{ $i->id }}', this.value)">
+                      <option value="">-- Pilih Jabatan --</option>
+
+                      @foreach($jabatanOptions as $j)
+                        <option value="{{ $j }}" @selected(!$isCustomEdit && $i->jabatan === $j)>
+                          {{ $j }}
+                        </option>
                       @endforeach
-                      </select>
+
+                      <option value="__custom__" @selected($isCustomEdit)>
+                        ➕ Jabatan Lainnya (Manual)
+                      </option>
+                    </select>
+
+                    <div class="mt-2 {{ $isCustomEdit ? '' : 'd-none' }}" id="jabatanManualWrapEdit{{ $i->id }}">
+                      <input type="text"
+                            name="jabatan_manual"
+                            class="form-control"
+                            placeholder="Masukkan nama jabatan baru">
+                      <small class="text-muted">Gunakan jika jabatan belum ada di daftar</small>
                     </div>
+                  </div>
 
                     <div class="col-md-6">
                       <label class="form-label fw-semibold">Nama</label>
@@ -446,14 +473,44 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold">Jabatan</label>
-              <select name="jabatan" class="form-select" required>
-                <option value="">- Pilih Jabatan -</option>
-                <option value="Kepala Bidang Pengendalian dan Kerusakan LH">Kepala Bidang Pengendalian dan Kerusakan LH</option>
-                <option value="Pengawas Lingkungan Hidup">Pengawas Lingkungan Hidup</option>
-                <option value="Analis">Analis</option>
-                <option value="Marketing">Marketing</option>
-              </select>
-            </div>
+              <select name="jabatan_select"
+                  id="jabatanSelect"
+                  class="form-select"
+                  required
+                  onchange="toggleJabatanManual(this.value)">
+              <option value="">-- Pilih Jabatan --</option>
+
+              {{-- LEVEL ATAS --}}
+              <option value="Manajer Puncak">Manajer Puncak</option>
+
+              {{-- LEVEL MANAJER --}}
+              <option value="Manajer Mutu">Manajer Mutu</option>
+              <option value="Manajer Teknis">Manajer Teknis</option>
+              <option value="Manajer Administrasi">Manajer Administrasi</option>
+
+              {{-- LEVEL STAF / OPERASIONAL --}}
+              <option value="Staf Mutu">Staf Mutu</option>
+              <option value="Penyelia">Penyelia</option>
+              <option value="Analis">Analis</option>
+              <option value="Petugas Sampling">Petugas Sampling</option>
+              <option value="Petugas K3L">Petugas K3L</option>
+              <option value="Penerima Contoh Uji">Penerima Contoh Uji</option>
+              <option value="Staf Administrasi">Staf Administrasi</option>
+
+              {{-- MANUAL --}}
+              <option value="__custom__">➕ Jabatan Lainnya (Manual)</option>
+                    </select>
+                      </div>
+                      <div class="mt-2 d-none" id="jabatanManualWrap">
+              <input type="text"
+                    name="jabatan_manual"
+                    class="form-control"
+                    placeholder="Masukkan nama jabatan baru">
+              <small class="text-muted">
+                  Gunakan jika jabatan belum ada di daftar
+              </small>
+          </div>
+
 
             <div class="col-md-6">
               <label class="form-label fw-semibold">Nama</label>
@@ -492,5 +549,32 @@
     </div>
   </div>
 </div>
+<script>
+function toggleJabatanManual(value) {
+  const wrap = document.getElementById('jabatanManualWrap');
+  const input = document.getElementById('jabatanManualInput');
 
+  if (value === '__custom__') {
+    wrap.classList.remove('d-none');
+    input.required = true;
+  } else {
+    wrap.classList.add('d-none');
+    input.required = false;
+    input.value = '';
+  }
+}
+function toggleJabatanManualEdit(id, value) {
+  const wrap = document.getElementById('jabatanManualWrapEdit' + id);
+  if (!wrap) return;
+
+  if (value === '__custom__') {
+    wrap.classList.remove('d-none');
+  } else {
+    wrap.classList.add('d-none');
+    // optional: kosongkan input manual kalau balik ke pilihan list
+    const input = wrap.querySelector('input[name="jabatan_manual"]');
+    if (input) input.value = '';
+  }
+}
+</script>
 @endsection
