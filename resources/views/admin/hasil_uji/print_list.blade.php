@@ -203,7 +203,8 @@
                 <th style="width:5%;">No</th>
                 <th style="width:16%;">Nama PIC</th>
                 <th style="width:12%;">No. HP</th>
-                <th style="width:20%;">Instansi</th>
+              <!--  <th style="width:20%;">Instansi</th> -->
+                <th style="width:18%;">Alamat</th>
                 <th style="width:12%;">Tgl Permintaan</th>
                 <th style="width:15%;">Tgl Hasil Diisi</th>
                 <th style="width:10%; text-align:center;">Upload File</th>
@@ -221,7 +222,8 @@
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $item->pic_name }}</td>
                 <td class="nowrap">{{ $item->pic_phone }}</td>
-                <td>{{ $item->user->instansi ?? '-' }}</td>
+                <!-- <td>{{ $item->user->instansi ?? '-' }}</td> -->
+                <td>{{ $item->sample_address }}</td>
                 <td class="nowrap">{{ $item->created_at->format('d-m-Y') }}</td>
 
                 <td class="nowrap">
