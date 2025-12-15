@@ -9,6 +9,7 @@ use App\Models\TestRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\LabDocument;
 
 class UjiController extends Controller
 {
@@ -127,6 +128,7 @@ class UjiController extends Controller
     foreach ($labelTahun as $t) {
         $dataAkunTahun[] = $akunPerTahun[$t] ?? 0;
     }
+   $labDoc = LabDocument::first();
 
     return view('admin.dashboard', compact(
         'pemeriksaan',
@@ -139,7 +141,8 @@ class UjiController extends Controller
         'terbitLHU',
         'labelTahun',
         'dataPermintaanTahun',
-        'dataAkunTahun'
+        'dataAkunTahun',
+        'labDoc'
     ));
 }
 
@@ -320,6 +323,35 @@ public function downloadPickupLetter($id)
     }
 
     return response()->download($path);
+}
+public function updateLabDocuments(Request $request)
+{
+    $doc = LabDocument::first() ?? LabDocument::create([]);
+
+    $request->validate([
+        'sop_file' => 'nullable|mimes:pdf,jpg,png|max:5120',
+        'sk_sop_file' => 'nullable|mimes:pdf,jpg,png|max:5120',
+    ]);
+
+    // SOP
+    if ($request->hasFile('sop_file')) {
+        if ($doc->sop_file && Storage::disk('public')->exists($doc->sop_file)) {
+            Storage::disk('public')->delete($doc->sop_file);
+        }
+        $doc->sop_file = $request->file('sop_file')->store('lab_docs', 'public');
+    }
+
+    // SK SOP
+    if ($request->hasFile('sk_sop_file')) {
+        if ($doc->sk_sop_file && Storage::disk('public')->exists($doc->sk_sop_file)) {
+            Storage::disk('public')->delete($doc->sk_sop_file);
+        }
+        $doc->sk_sop_file = $request->file('sk_sop_file')->store('lab_docs', 'public');
+    }
+
+    $doc->save();
+
+    return back()->with('success', 'Dokumen SOP berhasil diperbarui.');
 }
 
 }
