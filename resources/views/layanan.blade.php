@@ -156,68 +156,103 @@
 </div>
 
 {{-- ================== SECTION SOP LAB ================== --}}
-<section class="py-5" style="background: #ffffff;">
+<section class="py-5" style="background:#ffffff;">
   <div class="container">
-    <div class="text-center mb-4">
-      <h3 class="fw-bold" style="color:#189e1e">Dokumen SOP Laboratorium</h3>
-      <p class="text-muted" style="max-width: 850px; margin:0 auto;">
-        Dokumen <i>Standard Operating Procedure</i>
-      </p>
+
+    <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2 mb-3">
+      <div>
+        <h3 class="fw-bold mb-1" style="color:#189e1e">Dokumen SOP Laboratorium</h3>
+        <div class="text-muted" style="max-width:780px;">
+          Lihat cepat via modal atau unduh dokumen resmi SOP & SK SOP.
+        </div>
+      </div>
+
+      <span class="badge rounded-pill"
+            style="background:#eaffea; color:#14891c; border:1px solid #d9e8d9; padding:8px 12px;">
+        <i class="bi bi-shield-check me-1"></i> Dokumen Resmi
+      </span>
     </div>
 
-    <div class="row g-4 justify-content-center">
-      {{-- SOP --}}
-      <div class="col-md-6 col-lg-4">
-        <div class="p-4 rounded-4 bg-white shadow-sm h-100">
-          <div class="d-flex align-items-center gap-3 mb-2">
-            <i class="bi bi-file-earmark-text fs-1" style="color:#189e1e"></i>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card-body p-3 p-md-4">
+
+        {{-- ITEM: SOP --}}
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 py-2">
+          <div class="d-flex align-items-start gap-3">
+            <div class="rounded-3 d-flex align-items-center justify-content-center"
+                 style="width:44px;height:44px;background:#eaffea;border:1px solid #d9e8d9;">
+              <i class="bi bi-file-earmark-text fs-4" style="color:#14891c;"></i>
+            </div>
             <div>
-              <div class="fw-bold" style="color:#189e1e">SOP Laboratorium</div>
-              <div class="text-muted small">Preview & Download</div>
+              <div class="fw-bold" style="color:#0f172a;">SOP Laboratorium</div>
+              <div class="small text-muted">
+                @if(!empty($labDoc?->sop_file))
+                  <i class="bi bi-check-circle-fill text-success me-1"></i> Tersedia
+                @else
+                  <i class="bi bi-x-circle-fill text-danger me-1"></i> Belum tersedia
+                @endif
+              </div>
             </div>
           </div>
 
           @if(!empty($labDoc?->sop_file))
-            <button class="btn btn-success w-100 rounded-pill mb-2"
-                    data-bs-toggle="modal" data-bs-target="#modalSop">
-              <i class="bi bi-eye me-1"></i> Lihat SOP
-            </button>
-            <a class="btn btn-outline-success w-100 rounded-pill"
-               href="{{ route('dokumenlab.download','sop') }}">
-              <i class="bi bi-download me-1"></i> Download SOP
-            </a>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success btn-sm rounded-pill px-3"
+                      data-bs-toggle="modal" data-bs-target="#modalSop">
+                <i class="bi bi-eye me-1"></i> Lihat
+              </button>
+              <a class="btn btn-outline-success btn-sm rounded-pill px-3"
+                 href="{{ route('dokumenlab.download','sop') }}">
+                <i class="bi bi-download me-1"></i> Unduh
+              </a>
+            </div>
           @else
-            <div class="text-muted small">Dokumen belum tersedia.</div>
+            <span class="small text-muted">—</span>
           @endif
         </div>
-      </div>
 
-      {{-- SK SOP --}}
-      <div class="col-md-6 col-lg-4">
-        <div class="p-4 rounded-4 bg-white shadow-sm h-100">
-          <div class="d-flex align-items-center gap-3 mb-2">
-            <i class="bi bi-file-earmark-check fs-1" style="color:#189e1e"></i>
+        <hr class="my-2" style="border-color:#eef2f7;">
+
+        {{-- ITEM: SK SOP --}}
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 py-2">
+          <div class="d-flex align-items-start gap-3">
+            <div class="rounded-3 d-flex align-items-center justify-content-center"
+                 style="width:44px;height:44px;background:#eaffea;border:1px solid #d9e8d9;">
+              <i class="bi bi-file-earmark-check fs-4" style="color:#14891c;"></i>
+            </div>
             <div>
-              <div class="fw-bold" style="color:#189e1e">SK SOP Pengambilan dan Pengujian Contoh Uji</div>
-              <div class="text-muted small">Preview & Download</div>
+              <div class="fw-bold" style="color:#0f172a;">
+                SK SOP Pengambilan & Pengujian Contoh Uji
+              </div>
+              <div class="small text-muted">
+                @if(!empty($labDoc?->sk_sop_file))
+                  <i class="bi bi-check-circle-fill text-success me-1"></i> Tersedia
+                @else
+                  <i class="bi bi-x-circle-fill text-danger me-1"></i> Belum tersedia
+                @endif
+              </div>
             </div>
           </div>
 
           @if(!empty($labDoc?->sk_sop_file))
-            <button class="btn btn-success w-100 rounded-pill mb-2"
-                    data-bs-toggle="modal" data-bs-target="#modalSkSop">
-              <i class="bi bi-eye me-1"></i> Lihat SK SOP
-            </button>
-            <a class="btn btn-outline-success w-100 rounded-pill"
-               href="{{ route('dokumenlab.download','sk') }}">
-              <i class="bi bi-download me-1"></i> Download SK SOP
-            </a>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success btn-sm rounded-pill px-3"
+                      data-bs-toggle="modal" data-bs-target="#modalSkSop">
+                <i class="bi bi-eye me-1"></i> Lihat
+              </button>
+              <a class="btn btn-outline-success btn-sm rounded-pill px-3"
+                 href="{{ route('dokumenlab.download','sk') }}">
+                <i class="bi bi-download me-1"></i> Unduh
+              </a>
+            </div>
           @else
-            <div class="text-muted small">Dokumen belum tersedia.</div>
+            <span class="small text-muted">—</span>
           @endif
         </div>
+
       </div>
     </div>
+
   </div>
 </section>
 {{-- ===== MODAL SOP ===== --}}
