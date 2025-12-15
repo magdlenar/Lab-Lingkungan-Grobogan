@@ -155,6 +155,129 @@
   </div>
 </div>
 
+{{-- ================== SECTION SOP LAB ================== --}}
+<section class="py-5" style="background: #ffffff;">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold" style="color:#189e1e">Dokumen SOP Laboratorium</h3>
+      <p class="text-muted" style="max-width: 850px; margin:0 auto;">
+        Dokumen SOP dan SK SOP dapat dilihat melalui modal dan diunduh.
+      </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      {{-- SOP --}}
+      <div class="col-md-6 col-lg-4">
+        <div class="p-4 rounded-4 bg-white shadow-sm h-100">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <i class="bi bi-file-earmark-text fs-1" style="color:#189e1e"></i>
+            <div>
+              <div class="fw-bold" style="color:#189e1e">SOP Laboratorium</div>
+              <div class="text-muted small">Preview & Download</div>
+            </div>
+          </div>
+
+          @if(!empty($labDoc?->sop_file))
+            <button class="btn btn-success w-100 rounded-pill mb-2"
+                    data-bs-toggle="modal" data-bs-target="#modalSop">
+              <i class="bi bi-eye me-1"></i> Lihat SOP
+            </button>
+            <a class="btn btn-outline-success w-100 rounded-pill"
+               href="{{ route('dokumenlab.download','sop') }}">
+              <i class="bi bi-download me-1"></i> Download SOP
+            </a>
+          @else
+            <div class="text-muted small">Dokumen belum tersedia.</div>
+          @endif
+        </div>
+      </div>
+
+      {{-- SK SOP --}}
+      <div class="col-md-6 col-lg-4">
+        <div class="p-4 rounded-4 bg-white shadow-sm h-100">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <i class="bi bi-file-earmark-check fs-1" style="color:#189e1e"></i>
+            <div>
+              <div class="fw-bold" style="color:#189e1e">SK SOP Pengambilan dan Pengujian Contoh Uji</div>
+              <div class="text-muted small">Preview & Download</div>
+            </div>
+          </div>
+
+          @if(!empty($labDoc?->sk_sop_file))
+            <button class="btn btn-success w-100 rounded-pill mb-2"
+                    data-bs-toggle="modal" data-bs-target="#modalSkSop">
+              <i class="bi bi-eye me-1"></i> Lihat SK SOP
+            </button>
+            <a class="btn btn-outline-success w-100 rounded-pill"
+               href="{{ route('dokumenlab.download','sk') }}">
+              <i class="bi bi-download me-1"></i> Download SK SOP
+            </a>
+          @else
+            <div class="text-muted small">Dokumen belum tersedia.</div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{-- ===== MODAL SOP ===== --}}
+<div class="modal fade" id="modalSop" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title fw-semibold">SOP Laboratorium</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        @php $sopUrl = !empty($labDoc?->sop_file) ? asset('storage/'.$labDoc->sop_file) : null; @endphp
+
+        @if($sopUrl)
+          <iframe src="{{ $sopUrl }}" style="width:100%; height:75vh; border:0;"></iframe>
+        @else
+          <div class="text-muted">Dokumen belum tersedia.</div>
+        @endif
+      </div>
+      <div class="modal-footer">
+        @if(!empty($labDoc?->sop_file))
+          <a class="btn btn-success" href="{{ route('dokumenlab.download','sop') }}">
+            <i class="bi bi-download me-1"></i> Download
+          </a>
+        @endif
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- ===== MODAL SK SOP ===== --}}
+<div class="modal fade" id="modalSkSop" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title fw-semibold">SK SOP Pengambilan dan Pengujian Contoh Uji</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        @php $skUrl = !empty($labDoc?->sk_sop_file) ? asset('storage/'.$labDoc->sk_sop_file) : null; @endphp
+
+        @if($skUrl)
+          <iframe src="{{ $skUrl }}" style="width:100%; height:75vh; border:0;"></iframe>
+        @else
+          <div class="text-muted">Dokumen belum tersedia.</div>
+        @endif
+      </div>
+      <div class="modal-footer">
+        @if(!empty($labDoc?->sk_sop_file))
+          <a class="btn btn-success" href="{{ route('dokumenlab.download','sk') }}">
+            <i class="bi bi-download me-1"></i> Download
+          </a>
+        @endif
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- 🔹 SECTION 2: Parameter Uji Kualitas Air -->
 <section class="py-5" style="background: linear-gradient(to bottom, #f8fff8, #e9f7ef);">
   <div class="container">
