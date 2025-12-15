@@ -481,8 +481,8 @@
                         'pemeriksaan kelengkapan' => 'primary',
                         'persyaratan tidak lengkap' => 'danger',
                         'persyaratan lengkap' => 'success',
-                        'jadwal pengambilan sampel' => 'info',
                         'pengambilan sampel' => 'info',
+                        'sedang dilakukan analisis' => 'info',
                         'uji selesai' => 'secondary',
                         'verifikasi hasil uji' => 'warning',
                         'penerbitan lhu' => 'dark',
@@ -493,8 +493,8 @@
                         'pemeriksaan kelengkapan' => ['label'=>'Periksa', 'class'=>'primary'],
                         'persyaratan tidak lengkap' => ['label'=>'Perlu Perbaikan', 'class'=>'danger'],
                         'persyaratan lengkap' => ['label'=>'Atur Jadwal', 'class'=>'success'],
-                        'jadwal pengambilan sampel' => ['label'=>'Proses Pengambilan', 'class'=>'info'],
-                        'pengambilan sampel' => ['label'=>'Selesai Uji', 'class'=>'secondary'],
+                        'pengambilan sampel' => ['label'=>'Proses Pengambilan', 'class'=>'info'],
+                        'sedang dilakukan analisis' => ['label'=>'Selesai Uji', 'class'=>'secondary'],
                         'uji selesai' => ['label'=>'Verifikasi', 'class'=>'warning'],
                         'verifikasi hasil uji' => ['label'=>'Terbitkan LHU', 'class'=>'dark'],
                         default => null
@@ -684,8 +684,8 @@
                                             'pemeriksaan kelengkapan' => 'Pemeriksaan Kelengkapan',
                                             'persyaratan tidak lengkap' => 'Persyaratan Tidak Lengkap',
                                             'persyaratan lengkap' => 'Persyaratan Lengkap',
-                                            'jadwal pengambilan sampel' => 'Jadwal Pengambilan Sampel',
                                             'pengambilan sampel' => 'Pengambilan Sampel',
+                                            'sedang dilakukan analisis' => 'Sedang Dilakukan Analisis',
                                             'uji selesai' => 'Uji Selesai',
                                             'verifikasi hasil uji' => 'Verifikasi Hasil Uji',
                                             'penerbitan lhu' => 'Penerbitan dan Penandatanganan LHU'
@@ -837,7 +837,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // tampilkan tanggal jika status jadwal/pengambilan sampel
         if(dateBox){
-            const showDate = (val === 'jadwal pengambilan sampel' || val === 'pengambilan sampel');
+            const showDate = (val === 'pengambilan sampel');
             dateBox.classList.toggle('d-none', !showDate);
         }
     }
