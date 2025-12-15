@@ -206,7 +206,7 @@ public function printList(Request $request)
         $req = TestRequest::with('result')->findOrFail($test_request_id);
 
         $request->validate([
-            'result_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120'
+            'result_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:6144'
         ]);
 
         $file = $request->file('result_file');
