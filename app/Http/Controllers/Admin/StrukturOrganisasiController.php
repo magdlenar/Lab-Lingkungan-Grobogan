@@ -29,30 +29,78 @@ class StrukturOrganisasiController extends Controller
 
     return view('admin.struktur', compact('items','parents'));
 }
+        public function store(Request $request)
+{
+    $request->validate([
+        'jabatan_select' => ['required','string'],
+        'jabatan_manual' => ['nullable','string','max:255'],
+        'nama'           => ['required','string','max:255'],
+        'urutan'         => ['nullable','integer','min:0'],
+        'parent_id'      => ['nullable','exists:struktur_organisasis,id'],
+        'foto'           => ['nullable','image','mimes:jpg,jpeg,png,webp','max:5120'],
+    ]);
 
-    public function update(Request $request, StrukturOrganisasi $struktur)
-    {
-        $request->validate([
-            'jabatan' => 'required|string',
-            'nama' => 'required|string|max:255',
-            'urutan' => 'nullable|integer|min:0',
-            'parent_id' => 'nullable|exists:struktur_organisasis,id',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+    // ✅ gabungkan jabatan
+    $jabatanSelect = (string) $request->input('jabatan_select');
+    $jabatanManual = trim((string) $request->input('jabatan_manual', ''));
 
-        $data = $request->only('jabatan','nama','urutan','parent_id');
-
-        if($request->hasFile('foto')){
-            if($struktur->foto){
-                Storage::disk('public')->delete($struktur->foto);
-            }
-            $data['foto'] = $request->file('foto')->store('struktur', 'public');
+    if ($jabatanSelect === '__custom__') {
+        if ($jabatanManual === '') {
+            return back()->withErrors(['jabatan_manual' => 'Jabatan manual wajib diisi.'])->withInput();
         }
-
-        $struktur->update($data);
-
-        return back()->with('success','Data struktur organisasi berhasil diperbarui.');
+        $jabatan = $jabatanManual;
+    } else {
+        $jabatan = $jabatanSelect;
     }
+
+    $data = $request->only('nama','urutan','parent_id');
+    $data['jabatan'] = $jabatan;
+
+    if ($request->hasFile('foto')) {
+        $data['foto'] = $request->file('foto')->store('struktur', 'public');
+    }
+
+    StrukturOrganisasi::create($data);
+
+    return back()->with('success', 'Personel berhasil ditambahkan.');
+}
+
+
+  public function update(Request $request, StrukturOrganisasi $struktur)
+{
+    $request->validate([
+        'jabatan_select' => ['required','string'],
+        'jabatan_manual' => ['nullable','string','max:255'],
+        'nama'           => ['required','string','max:255'],
+        'urutan'         => ['nullable','integer','min:0'],
+        'parent_id'      => ['nullable','exists:struktur_organisasis,id'],
+        'foto'           => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
+    ]);
+
+    $jabatanSelect = (string) $request->input('jabatan_select');
+    $jabatanManual = trim((string) $request->input('jabatan_manual', ''));
+
+    if ($jabatanSelect === '__custom__') {
+        if ($jabatanManual === '') {
+            return back()->withErrors(['jabatan_manual' => 'Jabatan manual wajib diisi.'])->withInput();
+        }
+        $jabatan = $jabatanManual;
+    } else {
+        $jabatan = $jabatanSelect;
+    }
+
+    $data = $request->only('nama','urutan','parent_id');
+    $data['jabatan'] = $jabatan;
+
+    if ($request->hasFile('foto')) {
+        if ($struktur->foto) Storage::disk('public')->delete($struktur->foto);
+        $data['foto'] = $request->file('foto')->store('struktur', 'public');
+    }
+
+    $struktur->update($data);
+
+    return back()->with('success','Data struktur organisasi berhasil diperbarui.');
+}
 
     public function destroy(StrukturOrganisasi $struktur)
     {
