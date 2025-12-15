@@ -75,7 +75,7 @@ class UjiController extends Controller
     $tdkLengkap  = TestRequest::where('status', 'persyaratan tidak lengkap')->count();
     $lengkap     = TestRequest::where('status', 'persyaratan lengkap')->count();
     $jadwalSampel= TestRequest::where('status', 'jadwal pengambilan sampel')->count();
-    $ambilSampel = TestRequest::where('status', 'pengambilan sampel')->count();
+    $ambilSampel = TestRequest::where('status', 'sedang dilakukan analisis')->count();
     $ujiSelesai  = TestRequest::where('status', 'uji selesai')->count();
     $verifikasi  = TestRequest::where('status', 'verifikasi hasil uji')->count();
     $terbitLHU   = TestRequest::where('status', 'penerbitan LHU')->count(); // sesuai migration
