@@ -80,6 +80,8 @@ Route::prefix('admin')
         Route::get('/file/{id}', [UjiController::class, 'downloadFile'])->name('admin.file');
         Route::put('/uji/status/{id}', [UjiController::class, 'updateStatus'])->name('admin.uji.status');
         Route::delete('/uji/{id}', [UjiController::class, 'destroy'])->name('uji.destroy');
+        Route::get('/permintaan/{id}/pickup-letter', [UjiController::class, 'downloadPickupLetter'])
+        ->name('pickup_letter.download');
 
         // HASIL UJI
         Route::get('/hasil-uji', [HasilUjiController::class, 'index'])
@@ -145,6 +147,8 @@ Route::middleware('auth')->group(function () {
 
     // STATUS PERMINTAAN
     Route::get('/customer/status', [TestRequestController::class, 'status'])->name('uji.status');
+    Route::get('/uji/{id}/pickup-letter', [TestRequestController::class, 'downloadPickupLetterCustomer'])
+    ->name('uji.pickup_letter.download');
 
     // UPDATE JIKA PERSYARATAN TIDAK LENGKAP
     Route::post('/permintaan-uji/update/{id}', [TestRequestController::class, 'update'])->name('uji.update');
