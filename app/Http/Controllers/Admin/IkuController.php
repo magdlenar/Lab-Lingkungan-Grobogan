@@ -25,6 +25,7 @@ class IkuController extends Controller
     {
         $data = $request->validate([
             'kabupaten_kota' => 'required|string|max:120',
+            'tanggal'        => 'nullable|date',
             'rataan_no2'     => 'nullable|numeric',
             'rataan_so2'     => 'nullable|numeric',
             'indeks_no2'     => 'nullable|numeric',
@@ -43,6 +44,7 @@ class IkuController extends Controller
     {
         $data = $request->validate([
             'kabupaten_kota' => 'required|string|max:120',
+            'tanggal'        => 'nullable|date', 
             'rataan_no2'     => 'nullable|numeric',
             'rataan_so2'     => 'nullable|numeric',
             'indeks_no2'     => 'nullable|numeric',
