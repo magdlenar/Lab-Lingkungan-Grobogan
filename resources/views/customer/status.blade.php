@@ -329,7 +329,17 @@
                                                 <i class="bi bi-file-earmark-text me-1"></i>
                                                 Lihat Hasil Uji
                                             </a>
-
+                                            @elseif(strtolower(trim($req->status)) == 'pengambilan sampel')
+                                            @if($req->pickup_letter_file)
+                                                <a href="{{ route('uji.pickup_letter.download', $req->id) }}"
+                                                class="btn btn-success btn-sm w-100 fw-bold"
+                                                style="border-radius:12px;">
+                                                    <i class="bi bi-download me-1"></i>
+                                                    Download Surat Pengambilan
+                                                </a>
+                                            @else
+                                                <span class="text-muted small">Surat belum tersedia</span>
+                                            @endif
                                         @else
                                             <span class="text-muted small">Tidak ada aksi</span>
                                         @endif
