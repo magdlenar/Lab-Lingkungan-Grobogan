@@ -329,9 +329,8 @@
                 <tr class="group">
                     <th rowspan="3" style="width:60px;" class="hide-mobile">No</th>
                     <th rowspan="3">Kabupaten / Kota</th>
-
+                    <th rowspan="3" class="text-center hide-mobile">Tanggal</th>
                     <th colspan="5" class="text-center hide-mobile">Perhitungan Indeks</th>
-
                     <th rowspan="3" class="text-center hide-mobile">Nilai IKU</th>
                     <th rowspan="3" class="text-center hide-mobile">Target IKU</th>
                     <th rowspan="3" style="width:220px;">Aksi</th>
@@ -366,6 +365,9 @@
 
                     <td data-label="Kab/Kota" class="fw-semibold">
                         {{ $i->kabupaten_kota }}
+                    </td>
+                    <td data-label="Tanggal" class="hide-mobile">
+                    {{ $i->tanggal ? \Carbon\Carbon::parse($i->tanggal)->format('d-m-Y') : '-' }}
                     </td>
 
                     {{-- Rataan per parameter --}}
@@ -496,6 +498,11 @@
                                             <input name="kabupaten_kota" class="form-control"
                                                    value="{{ $i->kabupaten_kota }}" required>
                                         </div>
+                                        <div class="col-md-3">
+                                        <label class="form-label fw-semibold">Tanggal</label>
+                                        <input type="date" name="tanggal" class="form-control" value="{{ $i->tanggal }}">
+                                        </div>
+
 
                                         <div class="col-md-3">
                                             <label class="form-label fw-semibold">Rataan NO<sub>2</sub></label>
@@ -618,6 +625,11 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Kabupaten/Kota</label>
                             <input name="kabupaten_kota" class="form-control" required>
+                        </div>
+                        
+                        <div class="col-md-3">
+                        <label class="form-label fw-semibold">Tanggal</label>
+                        <input type="date" name="tanggal" class="form-control">
                         </div>
 
                         <div class="col-md-3">
