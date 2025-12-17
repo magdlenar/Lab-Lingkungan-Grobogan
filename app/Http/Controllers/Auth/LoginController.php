@@ -93,7 +93,7 @@ class LoginController extends Controller
                     ['email' => $user->email, 'name' => $user->nama],
                 ],
                 'subject' => 'Reset Password Akun Anda',
-                'htmlContent' => view('emails.reset_password', [
+                'htmlContent' => view('emails.reset-password', [
                     'url' => $resetUrl,
                     'user' => $user,
                 ])->render(),
