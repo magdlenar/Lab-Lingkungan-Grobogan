@@ -44,6 +44,8 @@ class RegisterController extends Controller
         try {
             Mail::to($user->email)->send(new VerificationCodeMail($user));
         } catch (\Exception $e) {
+            \Log::error('Email verification failed: ' . $e->getMessage());
+        
             return back()->withErrors([
                 'email' => 'Gagal mengirim email verifikasi. Coba lagi nanti.'
             ]);
