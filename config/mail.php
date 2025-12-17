@@ -34,12 +34,11 @@ return [
     |            "failover", "roundrobin"
     |
     */
-    'brevo' => [
-    'transport' => 'brevo',
-    ],
     
     'mailers' => [
-
+        'brevo' => [
+        'transport' => 'brevo',
+        ],
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),
