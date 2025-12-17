@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\VerificationCodeMail;
+use Illuminate\Support\Facades\Http;
 
 class RegisterController extends Controller
 {
@@ -41,18 +42,34 @@ class RegisterController extends Controller
             'role'              => 'customer', // default role
         ]);
 
-      \Log::info('Mulai kirim email verifikasi ke: ' . $user->email);
+     \Log::info('Mulai kirim email verifikasi (Brevo API) ke: ' . $user->email);
 
-    try {
-        Mail::to($user->email)->send(new VerificationCodeMail($user));
-        \Log::info('Email verification send() berhasil dipanggil');
-    } catch (\Throwable $e) {
-        \Log::error('Email verification failed: ' . $e->getMessage());
-    
-        return back()->withErrors([
-            'email' => 'Gagal mengirim email verifikasi. Coba lagi nanti.'
+        $response = Http::withHeaders([
+            'api-key' => env('BREVO_API_KEY'),
+            'accept' => 'application/json',
+            'content-type' => 'application/json',
+        ])->post('https://api.brevo.com/v3/smtp/email', [
+            'sender' => [
+                'name' => env('MAIL_FROM_NAME'),
+                'email' => env('MAIL_FROM_ADDRESS'),
+            ],
+            'to' => [
+                ['email' => $user->email, 'name' => $user->nama],
+            ],
+            'subject' => 'Kode Verifikasi Akun Anda',
+            'htmlContent' => view('emails.verification_code', ['user' => $user])->render(),
         ]);
-    }
+        
+        if (!$response->successful()) {
+            \Log::error('Brevo API failed: ' . $response->status() . ' ' . $response->body());
+        
+            return back()->withErrors([
+                'email' => 'Gagal mengirim email verifikasi. Coba lagi nanti.'
+            ]);
+        }
+        
+        \Log::info('Brevo API sukses kirim email verifikasi ke: ' . $user->email);
+
         // Simpan session untuk halaman verifikasi
         session(['verify_email' => $user->email]);
 
@@ -118,7 +135,27 @@ class RegisterController extends Controller
         $user->save();
 
         // Kirim email ulang
-        Mail::to($user->email)->send(new VerificationCodeMail($user));
+        $response = Http::withHeaders([
+            'api-key' => env('BREVO_API_KEY'),
+            'accept' => 'application/json',
+            'content-type' => 'application/json',
+        ])->post('https://api.brevo.com/v3/smtp/email', [
+            'sender' => [
+                'name' => env('MAIL_FROM_NAME'),
+                'email' => env('MAIL_FROM_ADDRESS'),
+            ],
+            'to' => [
+                ['email' => $user->email, 'name' => $user->nama],
+            ],
+            'subject' => 'Kode Verifikasi Akun Anda (Kirim Ulang)',
+            'htmlContent' => view('emails.verification_code', ['user' => $user])->render(),
+        ]);
+        
+        if (!$response->successful()) {
+            \Log::error('Brevo API resend failed: ' . $response->status() . ' ' . $response->body());
+            return back()->withErrors(['email' => 'Gagal mengirim ulang kode. Coba lagi nanti.']);
+        }
+
 
         return back()->with('status', 'Kode verifikasi baru telah dikirim!');
     }
