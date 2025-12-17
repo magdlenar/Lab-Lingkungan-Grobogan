@@ -41,21 +41,21 @@ class RegisterController extends Controller
             'role'              => 'customer', // default role
         ]);
 
-        try {
+       try {
             Mail::to($user->email)->send(new VerificationCodeMail($user));
         } catch (\Exception $e) {
-            \Log::error('Email verification failed: ' . $e->getMessage());
-        
-            return redirect()->route('verify.email')
-                ->withErrors([
-                    'email' => 'Email gagal terkirim. Silakan klik "Kirim ulang".'
-                ]);
+            return back()->withErrors([
+                'email' => 'Gagal mengirim email verifikasi. Coba lagi nanti.'
+            ]);
         }
-          // simpan session dulu
+
+        // Simpan session untuk halaman verifikasi
         session(['verify_email' => $user->email]);
+
         return redirect()
             ->route('verify.email')
             ->with('status', 'Kode verifikasi telah dikirim ke email Anda.');
+    }
 
     public function showVerifyForm()
     {
