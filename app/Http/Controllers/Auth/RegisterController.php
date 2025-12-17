@@ -61,6 +61,11 @@ class RegisterController extends Controller
 
     public function showVerifyForm()
     {
+        if (!session('verify_email')) {
+            return redirect()->route('register')
+                ->withErrors(['email' => 'Session verifikasi tidak ditemukan. Silakan daftar ulang.']);
+        }
+    
         return view('auth.verify_email');
     }
 
