@@ -29,12 +29,11 @@
                 </div>
             @endif
 
-            @if ($errors->any())
+            @if ($errors->login->any())
                 <div class="alert alert-danger text-center">
-                    Email atau password tidak valid.
+                    {{ $errors->login->first() }}
                 </div>
             @endif
-
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
@@ -96,6 +95,18 @@
 
             <form method="POST" action="{{ route('password.email') }}">
                 @csrf
+                {{-- ALERT RESET PASSWORD --}}
+                @if ($errors->forgot->any())
+                    <div class="alert alert-danger">
+                        {{ $errors->forgot->first('email') }}
+                    </div>
+                @endif
+            
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
                 <div class="modal-body">
                     <p class="text-muted">Masukkan email Anda untuk menerima link reset password.</p>
 
