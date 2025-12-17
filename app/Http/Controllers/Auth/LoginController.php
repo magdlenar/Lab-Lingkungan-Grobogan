@@ -69,51 +69,44 @@ class LoginController extends Controller
         ]);
     
         $user = \App\Models\User::where('email', $request->email)->first();
-    
         if (!$user) {
             return back()->withErrors(['email' => 'Email tidak ditemukan.']);
         }
     
-        // buat token reset
-        $token = Str::random(64);
+        // ✅ generate token pakai Laravel broker (otomatis simpan ke tabel yang benar)
+        $token = Password::createToken($user);
     
-        // simpan ke password_resets
-        DB::table('password_resets')->updateOrInsert(
-            ['email' => $user->email],
-            [
-                'token' => Hash::make($token),
-                'created_at' => now(),
-            ]
-        );
+        // ✅ buat URL reset (pakai route biar rapih)
+        $resetUrl = url('/reset-password/'.$token.'?email='.urlencode($user->email));
     
-        // link reset
-        $resetUrl = url('/reset-password/' . $token . '?email=' . urlencode($user->email));
-    
-        // kirim via Brevo API
-        $response = Http::withHeaders([
-            'api-key' => env('BREVO_API_KEY'),
-            'accept' => 'application/json',
-            'content-type' => 'application/json',
-        ])->post('https://api.brevo.com/v3/smtp/email', [
-            'sender' => [
-                'name' => env('MAIL_FROM_NAME'),
-                'email' => env('MAIL_FROM_ADDRESS'),
-            ],
-            'to' => [
-                ['email' => $user->email, 'name' => $user->nama],
-            ],
-            'subject' => 'Reset Password Akun Anda',
-            'htmlContent' => view('emails.reset_password', [
-                'url' => $resetUrl,
-                'user' => $user,
-            ])->render(),
-        ]);
-    
-        if (!$response->successful()) {
-            \Log::error('Brevo reset password failed: ' . $response->body());
-            return back()->withErrors([
-                'email' => 'Gagal mengirim email reset password.',
+        try {
+            $response = Http::withHeaders([
+                'api-key' => env('BREVO_API_KEY'),
+                'accept' => 'application/json',
+                'content-type' => 'application/json',
+            ])->post('https://api.brevo.com/v3/smtp/email', [
+                'sender' => [
+                    'name' => env('MAIL_FROM_NAME'),
+                    'email' => env('MAIL_FROM_ADDRESS'),
+                ],
+                'to' => [
+                    ['email' => $user->email, 'name' => $user->nama],
+                ],
+                'subject' => 'Reset Password Akun Anda',
+                'htmlContent' => view('emails.reset_password', [
+                    'url' => $resetUrl,
+                    'user' => $user,
+                ])->render(),
             ]);
+    
+            if (!$response->successful()) {
+                \Log::error('Brevo reset password failed: '.$response->status().' '.$response->body());
+                return back()->withErrors(['email' => 'Gagal mengirim email reset password.']);
+            }
+    
+        } catch (\Throwable $e) {
+            \Log::error('Brevo reset password exception: '.$e->getMessage());
+            return back()->withErrors(['email' => 'Gagal mengirim email reset password.']);
         }
     
         return back()->with('status', 'Link reset password telah dikirim ke email Anda.');
