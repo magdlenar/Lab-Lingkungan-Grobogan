@@ -34,7 +34,10 @@ return [
     |            "failover", "roundrobin"
     |
     */
-
+    'brevo' => [
+    'transport' => 'brevo',
+    ],
+    
     'mailers' => [
 
         'smtp' => [
