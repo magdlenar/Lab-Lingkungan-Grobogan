@@ -41,9 +41,6 @@ class RegisterController extends Controller
             'role'              => 'customer', // default role
         ]);
 
-       // simpan session dulu
-        session(['verify_email' => $user->email]);
-        
         try {
             Mail::to($user->email)->send(new VerificationCodeMail($user));
         } catch (\Exception $e) {
@@ -54,7 +51,8 @@ class RegisterController extends Controller
                     'email' => 'Email gagal terkirim. Silakan klik "Kirim ulang".'
                 ]);
         }
-        
+          // simpan session dulu
+        session(['verify_email' => $user->email]);
         return redirect()
             ->route('verify.email')
             ->with('status', 'Kode verifikasi telah dikirim ke email Anda.');
