@@ -36,11 +36,8 @@ class GaleriController extends Controller
         ]);
     
         $path = null;
-    
         if ($request->hasFile('gambar')) {
-            // ✅ upload ke Backblaze (S3) + jadikan PUBLIC biar bisa diakses sebagai gambar
-            $path = $request->file('gambar')->storePublicly('galeri', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
+        $path = $request->file('gambar')->store('galeri', 's3'); 
         }
     
         Galeri::create([
@@ -65,23 +62,11 @@ class GaleriController extends Controller
         ]);
     
         if ($request->hasFile('gambar')) {
-    
-            // ✅ normalisasi key lama (kalau ada yang nyimpan "storage/galeri/xxx.jpg")
-            $oldKey = $galeri->gambar ? ltrim($galeri->gambar, '/') : null;
-            if ($oldKey) {
-                $oldKey = \Illuminate\Support\Str::replaceFirst('storage/', '', $oldKey);
+            if ($galeri->gambar && Storage::disk('s3')->exists($galeri->gambar)) {
+                Storage::disk('s3')->delete($galeri->gambar);
             }
     
-            // ✅ hapus gambar lama di Backblaze
-            if ($oldKey && Storage::disk('s3')->exists($oldKey)) {
-                Storage::disk('s3')->delete($oldKey);
-            }
-    
-            // ✅ simpan baru ke Backblaze + public
-            $newPath = $request->file('gambar')->storePublicly('galeri', 's3');
-            Storage::disk('s3')->setVisibility($newPath, 'public');
-    
-            $galeri->gambar = $newPath;
+            $galeri->gambar = $request->file('gambar')->store('galeri', 's3');
         }
     
         $galeri->judul = $request->judul;
@@ -91,7 +76,7 @@ class GaleriController extends Controller
     
         return back()->with('success','Artikel berhasil diupdate.');
     }
-    
+
     public function adminDestroy($id)
     {
         $galeri = Galeri::findOrFail($id);
