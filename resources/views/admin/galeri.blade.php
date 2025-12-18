@@ -402,13 +402,17 @@
                     <td data-label="Gambar">
                         @php
                           $imgUrl = null;
-                          if ($g->gambar) {
-                            $imgUrl = Str::startsWith($g->gambar, ['http://','https://'])
-                              ? $g->gambar
-                              : Storage::disk('public')->url($g->gambar); // hasil: /storage/....
+                        
+                          if (!empty($g->gambar)) {
+                            // kalau sudah full URL, pakai langsung
+                            if (Str::startsWith($g->gambar, ['http://','https://'])) {
+                              $imgUrl = $g->gambar;
+                            } else {
+                              $imgUrl = Storage::disk('s3')->url($g->gambar);
+                            }
                           }
                         @endphp
-                        
+    
                         @if($imgUrl)
                           <img src="{{ $imgUrl }}" class="thumb" alt="thumb">
                         @else
@@ -484,12 +488,12 @@
 
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Ganti Gambar</label>
-                                            <input type="file" name="gambar" class="form-control">
-                                            @if($g->gambar)
+                                            <input type="file" name="gambar" class="form-control" accept="image/*">
+                                            @if(!empty($g->gambar))
                                               @php
                                                 $currentImg = Str::startsWith($g->gambar, ['http://','https://'])
                                                   ? $g->gambar
-                                                  : Storage::disk('public')->url($g->gambar);
+                                                  : Storage::disk('s3')->url($g->gambar); // ✅ S3/Backblaze
                                               @endphp
                                               <img src="{{ $currentImg }}" class="thumb mt-2" alt="current">
                                             @endif
