@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 @section('title','Galeri')
 
+@php
+  use Illuminate\Support\Facades\Storage;
+  use Illuminate\Support\Str;
+@endphp
+
 @section('content')
 
 <style>
@@ -395,10 +400,19 @@
                     </td>
 
                     <td data-label="Gambar">
-                        @if($g->gambar)
-                            <img src="{{ asset('storage/'.$g->gambar) }}" class="thumb" alt="thumb">
+                        @php
+                          $imgUrl = null;
+                          if ($g->gambar) {
+                            $imgUrl = Str::startsWith($g->gambar, ['http://','https://'])
+                              ? $g->gambar
+                              : Storage::disk('public')->url($g->gambar); // hasil: /storage/....
+                          }
+                        @endphp
+                        
+                        @if($imgUrl)
+                          <img src="{{ $imgUrl }}" class="thumb" alt="thumb">
                         @else
-                            <div class="text-muted small">Tidak ada gambar</div>
+                          <div class="text-muted small">Tidak ada gambar</div>
                         @endif
                     </td>
 
@@ -472,7 +486,12 @@
                                             <label class="form-label fw-semibold">Ganti Gambar</label>
                                             <input type="file" name="gambar" class="form-control">
                                             @if($g->gambar)
-                                                <img src="{{ asset('storage/'.$g->gambar) }}" class="thumb mt-2" alt="current">
+                                              @php
+                                                $currentImg = Str::startsWith($g->gambar, ['http://','https://'])
+                                                  ? $g->gambar
+                                                  : Storage::disk('public')->url($g->gambar);
+                                              @endphp
+                                              <img src="{{ $currentImg }}" class="thumb mt-2" alt="current">
                                             @endif
                                         </div>
 
