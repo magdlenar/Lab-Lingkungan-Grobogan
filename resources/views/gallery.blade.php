@@ -3,6 +3,9 @@
 
 @section('content')
 @php
+    use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Str;
+
     $galeriCol = $galeris->getCollection();
     $isFirstPage = $galeris->currentPage() == 1;
 
@@ -15,6 +18,24 @@
         $sideList = collect();
         $gridList = $galeriCol;
     }
+ // helper kecil biar rapi
+    $b2Img = function ($path) {
+        if (empty($path)) return null;
+
+        // kalau sudah full url, pakai langsung
+        if (Str::startsWith($path, ['http://','https://'])) return $path;
+
+        // bersihin kalau ada prefix "storage/"
+        $key = ltrim($path, '/');
+        $key = Str::replaceFirst('storage/', '', $key);
+
+        try {
+            // bucket private -> pakai signed url
+            return Storage::disk('s3')->temporaryUrl($key, now()->addMinutes(30));
+        } catch (\Throwable $e) {
+            return null;
+        }
+    };
 @endphp
 
 <style>
@@ -361,13 +382,19 @@
                 <a href="{{ route('galeri.show', $featured->slug) }}" class="text-decoration-none">
                     <div class="featured-card">
                         @if($featured->gambar)
-                            <img src="{{ asset('storage/'.$featured->gambar) }}" class="featured-thumb" alt="featured">
+                        @php $img = $b2Img($featured->gambar); @endphp
+                        @if($img)
+                            <img src="{{ $img }}" class="featured-thumb" alt="featured">
                         @else
                             <div class="featured-thumb d-flex align-items-center justify-content-center text-white">
-                                Tidak ada gambar
+                                Gambar tidak bisa diakses
                             </div>
                         @endif
-
+                    @else
+                        <div class="featured-thumb d-flex align-items-center justify-content-center text-white">
+                            Tidak ada gambar
+                        </div>
+                    @endif
                         <div class="featured-overlay">
                             <div class="featured-title clamp-2">{{ $featured->judul }}</div>
                             <div class="featured-meta">
@@ -387,13 +414,19 @@
                         <a href="{{ route('galeri.show', $s->slug) }}" class="text-decoration-none text-dark">
                             <div class="side-card">
                                 @if($s->gambar)
-                                    <img src="{{ asset('storage/'.$s->gambar) }}" class="side-thumb" alt="side">
+                                @php $img = $b2Img($s->gambar); @endphp
+                                @if($img)
+                                    <img src="{{ $img }}" class="side-thumb" alt="side">
                                 @else
                                     <div class="side-thumb d-flex align-items-center justify-content-center text-muted">
-                                        Tidak ada gambar
+                                        Gambar tidak bisa diakses
                                     </div>
                                 @endif
-
+                            @else
+                                <div class="side-thumb d-flex align-items-center justify-content-center text-muted">
+                                    Tidak ada gambar
+                                </div>
+                            @endif
                                 <div class="side-body">
                                     <div class="side-title clamp-2">{{ $s->judul }}</div>
                                     <div class="side-meta">
@@ -426,13 +459,19 @@
                     <a href="{{ route('galeri.show', $g->slug) }}" class="text-decoration-none text-dark">
                         <div class="gallery-card">
                             @if($g->gambar)
-                                <img src="{{ asset('storage/'.$g->gambar) }}" class="gallery-thumb" alt="thumb">
+                            @php $img = $b2Img($g->gambar); @endphp
+                            @if($img)
+                                <img src="{{ $img }}" class="gallery-thumb" alt="thumb">
                             @else
                                 <div class="gallery-thumb d-flex align-items-center justify-content-center text-muted">
-                                    Tidak ada gambar
+                                    Gambar tidak bisa diakses
                                 </div>
                             @endif
-
+                        @else
+                            <div class="gallery-thumb d-flex align-items-center justify-content-center text-muted">
+                                Tidak ada gambar
+                            </div>
+                        @endif
                             <div class="p-3">
                                 <div class="gallery-title clamp-2">{{ $g->judul }}</div>
                                 <div class="text-muted small mb-2">
