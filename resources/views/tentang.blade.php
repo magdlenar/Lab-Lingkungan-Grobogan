@@ -103,6 +103,13 @@
 }
 .namelist .name{ margin-top:6px; }
 
+/* ✅ MODE TANPA FOTO KHUSUS STRUKTUR */
+.node.no-ava.lg{ padding:16px 16px 16px; }
+.node.no-ava.sm{ padding:14px 14px 14px; }
+.node.no-ava .role{ margin-top:0; }
+.node.no-ava .name{ margin-top:8px; }
+.node.no-ava .namelist .name{ margin-top:6px; }
+
 /* ===== LEVEL 1 (TOP) ===== */
 .lvl1{
   display:flex;
@@ -131,18 +138,18 @@
 }
 
 /* garis utama horizontal yang menghubungkan 3 manajer */
-  .lvl2::before{
+.lvl2::before{
   content:"";
-    position:absolute;
-    top:0;
+  position:absolute;
+  top:0;
 
-    /* ✅ garis menyentuh manajer kiri & kanan */
-    left: calc(50% - (var(--w-lg) + var(--gap-x)) - 400px);
-    right: calc(50% - (var(--w-lg) + var(--gap-x)) - 300px);
+  /* ✅ garis menyentuh manajer kiri & kanan */
+  left: calc(50% - (var(--w-lg) + var(--gap-x)) - 400px);
+  right: calc(50% - (var(--w-lg) + var(--gap-x)) - 300px);
 
-    height:var(--stroke);
-    background:var(--line);
-  }
+  height:var(--stroke);
+  background:var(--line);
+}
 
 .col{
   position:relative;
@@ -450,7 +457,7 @@
 </section>
 
     {{-- STRUKTUR ORGANISASI --}}
-    {{-- @php
+{{-- @php
       use Illuminate\Support\Facades\Storage;
     @endphp --}}
 
@@ -485,8 +492,7 @@
 
           {{-- LEVEL 1 --}}
           <div class="lvl1">
-            <div class="node lg">
-              <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+            <div class="node lg no-ava">
               <div class="role">{{ $top->jabatan }}</div>
               <div class="name">{{ $top->nama }}</div>
             </div>
@@ -498,16 +504,14 @@
             {{-- MUTU --}}
             <div class="col col-mutu">
               @if($mutu)
-                <div class="node lg">
-                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                <div class="node lg no-ava">
                   <div class="role">{{ $mutu->jabatan }}</div>
                   <div class="name">{{ $mutu->nama }}</div>
                 </div>
               @endif
 
               @if($stafMutuList->count())
-                <div class="node sm">
-                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                <div class="node sm no-ava">
                   <div class="role">Staf Mutu</div>
                   <div class="namelist">
                     @foreach($stafMutuList as $sm)
@@ -521,8 +525,7 @@
             {{-- TEKNIS --}}
             <div class="col has-split">
               @if($teknis)
-                <div class="node lg">
-                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                <div class="node lg no-ava">
                   <div class="role">{{ $teknis->jabatan }}</div>
                   <div class="name">{{ $teknis->nama }}</div>
                 </div>
@@ -532,8 +535,7 @@
                 @if($penyelia)
                   <div class="child">
                     <div class="branch {{ ($analisList->count() || $samplingList->count()) ? 'has-sub' : '' }}">
-                      <div class="node sm">
-                        <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                      <div class="node sm no-ava">
                         <div class="role">{{ $penyelia->jabatan }}</div>
                         <div class="name">{{ $penyelia->nama }}</div>
                       </div>
@@ -541,8 +543,7 @@
                       @if($analisList->count() || $samplingList->count())
                         <div class="sub-split">
                           @if($analisList->count())
-                            <div class="node sm">
-                              <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                            <div class="node sm no-ava">
                               <div class="role">Analis</div>
                               <div class="namelist">
                                 @foreach($analisList as $a)
@@ -553,8 +554,7 @@
                           @endif
 
                           @if($samplingList->count())
-                            <div class="node sm">
-                              <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                            <div class="node sm no-ava">
                               <div class="role">Petugas Sampling</div>
                               <div class="namelist">
                                 @foreach($samplingList as $s)
@@ -571,8 +571,7 @@
 
                 @if($k3lList->count())
                   <div class="child">
-                    <div class="node sm">
-                      <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                    <div class="node sm no-ava">
                       <div class="role">Petugas K3L</div>
                       <div class="namelist">
                         @foreach($k3lList as $k)
@@ -588,8 +587,7 @@
             {{-- ADMINISTRASI --}}
             <div class="col has-split">
               @if($admin)
-                <div class="node lg">
-                 <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                <div class="node lg no-ava">
                   <div class="role">{{ $admin->jabatan }}</div>
                   <div class="name">{{ $admin->nama }}</div>
                 </div>
@@ -598,8 +596,7 @@
               <div class="row-split">
                 @if($penerimaCU->count())
                   <div class="child">
-                    <div class="node sm">
-                      <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                    <div class="node sm no-ava">
                       <div class="role">Penerima Contoh Uji</div>
                       <div class="namelist">
                         @foreach($penerimaCU as $p)
@@ -612,8 +609,7 @@
 
                 @if($stafAdmin)
                   <div class="child">
-                    <div class="node sm">
-                      <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+                    <div class="node sm no-ava">
                       <div class="role">{{ $stafAdmin->jabatan }}</div>
                       <div class="name">{{ $stafAdmin->nama }}</div>
                     </div>
@@ -628,7 +624,6 @@
     @endif
   </div>
 </section>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
