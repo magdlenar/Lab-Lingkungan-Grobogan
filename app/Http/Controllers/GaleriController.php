@@ -37,10 +37,7 @@ class GaleriController extends Controller
 
         $path = null;
         if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('storage/galeri'), $filename);
-            $g->gambar = 'galeri/'.$filename;
+            $path = $request->file('gambar')->store('galeri', 's3');
         }
         Galeri::create([
             'judul' => $request->judul,
@@ -64,8 +61,13 @@ class GaleriController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            if ($galeri->gambar) Storage::disk('public')->delete($galeri->gambar);
-            $galeri->gambar = $request->file('gambar')->store('galeri','public');
+            // ✅ HAPUS GAMBAR LAMA DI B2
+            if ($galeri->gambar && Storage::disk('s3')->exists($galeri->gambar)) {
+                Storage::disk('s3')->delete($galeri->gambar);
+            }
+
+            // ✅ SIMPAN GAMBAR BARU KE B2
+            $galeri->gambar = $request->file('gambar')->store('galeri', 's3');
         }
 
         $galeri->judul = $request->judul;
@@ -80,7 +82,11 @@ class GaleriController extends Controller
     {
         $galeri = Galeri::findOrFail($id);
 
-        if ($galeri->gambar) Storage::disk('public')->delete($galeri->gambar);
+        / ✅ HAPUS FILE DI BACKBLAZE B2
+        if ($galeri->gambar && Storage::disk('s3')->exists($galeri->gambar)) {
+            Storage::disk('s3')->delete($galeri->gambar);
+        }
+
         $galeri->delete();
 
         return back()->with('success','Artikel berhasil dihapus.');
@@ -129,12 +135,11 @@ class GaleriController extends Controller
         return back()->with('success','Komentar berhasil dikirim.');
     }
         public function destroyComment($id)
-    {
-        // sesuaikan model komentar kamu
-        $comment = \App\Models\GaleriComment::findOrFail($id);
-        $comment->delete();
-
-        return back()->with('success', 'Komentar berhasil dihapus.');
-    }
+        {
+            $comment = GaleriComment::findOrFail($id);
+            $comment->delete();
+    
+            return back()->with('success', 'Komentar berhasil dihapus.');
+        }
 
 }
