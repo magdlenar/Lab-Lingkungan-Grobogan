@@ -450,9 +450,9 @@
 </section>
 
     {{-- STRUKTUR ORGANISASI --}}
-    @php
-  use Illuminate\Support\Facades\Storage;
-@endphp
+    {{-- @php
+      use Illuminate\Support\Facades\Storage;
+    @endphp --}}
 
 <section class="py-5" style="background-color:#e9f7ef;">
   <div class="container text-center">
@@ -486,12 +486,7 @@
           {{-- LEVEL 1 --}}
           <div class="lvl1">
             <div class="node lg">
-              @php
-                $topFoto = $top->foto
-                  ? Storage::disk('s3')->temporaryUrl($top->foto, now()->addMinutes(10))
-                  : asset('images/default-user.png');
-              @endphp
-              <img class="ava" src="{{ $topFoto }}" alt="foto">
+              <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
               <div class="role">{{ $top->jabatan }}</div>
               <div class="name">{{ $top->nama }}</div>
             </div>
@@ -504,12 +499,7 @@
             <div class="col col-mutu">
               @if($mutu)
                 <div class="node lg">
-                  @php
-                    $mutuFoto = $mutu->foto
-                      ? Storage::disk('s3')->temporaryUrl($mutu->foto, now()->addMinutes(10))
-                      : asset('images/default-user.png');
-                  @endphp
-                  <img class="ava" src="{{ $mutuFoto }}" alt="foto">
+                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
                   <div class="role">{{ $mutu->jabatan }}</div>
                   <div class="name">{{ $mutu->nama }}</div>
                 </div>
@@ -532,12 +522,7 @@
             <div class="col has-split">
               @if($teknis)
                 <div class="node lg">
-                  @php
-                    $teknisFoto = $teknis->foto
-                      ? Storage::disk('s3')->temporaryUrl($teknis->foto, now()->addMinutes(10))
-                      : asset('images/default-user.png');
-                  @endphp
-                  <img class="ava" src="{{ $teknisFoto }}" alt="foto">
+                  <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
                   <div class="role">{{ $teknis->jabatan }}</div>
                   <div class="name">{{ $teknis->nama }}</div>
                 </div>
@@ -548,12 +533,7 @@
                   <div class="child">
                     <div class="branch {{ ($analisList->count() || $samplingList->count()) ? 'has-sub' : '' }}">
                       <div class="node sm">
-                        @php
-                          $penyeliaFoto = $penyelia->foto
-                            ? Storage::disk('s3')->temporaryUrl($penyelia->foto, now()->addMinutes(10))
-                            : asset('images/default-user.png');
-                        @endphp
-                        <img class="ava" src="{{ $penyeliaFoto }}" alt="foto">
+                        <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
                         <div class="role">{{ $penyelia->jabatan }}</div>
                         <div class="name">{{ $penyelia->nama }}</div>
                       </div>
@@ -609,12 +589,7 @@
             <div class="col has-split">
               @if($admin)
                 <div class="node lg">
-                  @php
-                    $adminFoto = $admin->foto
-                      ? Storage::disk('s3')->temporaryUrl($admin->foto, now()->addMinutes(10))
-                      : asset('images/default-user.png');
-                  @endphp
-                  <img class="ava" src="{{ $adminFoto }}" alt="foto">
+                 <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
                   <div class="role">{{ $admin->jabatan }}</div>
                   <div class="name">{{ $admin->nama }}</div>
                 </div>
@@ -638,12 +613,7 @@
                 @if($stafAdmin)
                   <div class="child">
                     <div class="node sm">
-                      @php
-                        $stafAdminFoto = $stafAdmin->foto
-                          ? Storage::disk('s3')->temporaryUrl($stafAdmin->foto, now()->addMinutes(10))
-                          : asset('images/default-user.png');
-                      @endphp
-                      <img class="ava" src="{{ $stafAdminFoto }}" alt="foto">
+                      <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
                       <div class="role">{{ $stafAdmin->jabatan }}</div>
                       <div class="name">{{ $stafAdmin->nama }}</div>
                     </div>
