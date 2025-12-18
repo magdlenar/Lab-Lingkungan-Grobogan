@@ -322,14 +322,14 @@ public function updateLabDocuments(Request $request)
 
     // SOP
     if ($request->hasFile('sop_file')) {
-        if ($doc->sop_file) {
-            try {
-                Storage::disk('s3')->delete($doc->sop_file);
-            } catch (\Throwable $e) {
-                \Log::warning('Gagal hapus SOP lama di S3: '.$doc->sop_file.' | '.$e->getMessage());
-            }
+            if ($doc->sop_file) {
+        try {
+            Storage::disk('s3')->delete($doc->sop_file);
+        } catch (\Throwable $e) {
+            \Log::warning('Gagal hapus SOP lama di S3: '.$doc->sop_file.' | '.$e->getMessage());
         }
-        $doc->sop_file = $request->file('sop_file')->store('lab_docs', 's3');
+    }
+    $doc->sop_file = $request->file('sop_file')->store('lab_docs', 's3');
     }
 
     // SK SOP
