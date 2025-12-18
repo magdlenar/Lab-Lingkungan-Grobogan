@@ -3,6 +3,10 @@
 
 @section('content')
 
+@php
+  use Illuminate\Support\Facades\Storage;
+@endphp
+
 <style>
 /* ===================== SENADA DENGAN GALERI / AKUN TERDAFTAR ===================== */
 :root{
@@ -269,9 +273,12 @@
           </td>
 
           <td data-label="Foto">
-            <img class="ava"
-                 src="{{ $i->foto ? asset('storage/'.$i->foto) : asset('images/default-user.png') }}"
-                 alt="foto">
+            @php
+              $fotoUrl = $i->foto
+                ? Storage::disk('s3')->temporaryUrl($i->foto, now()->addMinutes(10))
+                : asset('images/default-user.png');
+            @endphp
+            <img class="ava" src="{{ $fotoUrl }}" alt="foto">
           </td>
 
           <td data-label="Jabatan">
@@ -394,7 +401,8 @@
                       <label class="form-label fw-semibold">Foto (opsional)</label>
                       <input type="file" name="foto" class="form-control">
                       @if($i->foto)
-                        <img src="{{ asset('storage/'.$i->foto) }}" class="ava mt-2" alt="current">
+                        @php $currentFoto = Storage::disk('s3')->temporaryUrl($i->foto, now()->addMinutes(10)); @endphp
+                        <img src="{{ $currentFoto }}" class="ava mt-2" alt="current">
                       @endif
                     </div>
                   </div>
@@ -502,10 +510,12 @@
                     </select>
                       </div>
                       <div class="mt-2 d-none" id="jabatanManualWrap">
-              <input type="text"
-                    name="jabatan_manual"
-                    class="form-control"
-                    placeholder="Masukkan nama jabatan baru">
+                {{-- ✅ aku tambahin id biar JS gak error --}}
+                <input type="text"
+                      id="jabatanManualInput"
+                      name="jabatan_manual"
+                      class="form-control"
+                      placeholder="Masukkan nama jabatan baru">
               <small class="text-muted">
                   Gunakan jika jabatan belum ada di daftar
               </small>
