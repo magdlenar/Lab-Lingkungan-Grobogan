@@ -82,7 +82,6 @@ class GaleriController extends Controller
     {
         $galeri = Galeri::findOrFail($id);
 
-        / ✅ HAPUS FILE DI BACKBLAZE B2
         if ($galeri->gambar && Storage::disk('s3')->exists($galeri->gambar)) {
             Storage::disk('s3')->delete($galeri->gambar);
         }
