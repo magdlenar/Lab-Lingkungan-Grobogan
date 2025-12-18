@@ -108,12 +108,8 @@
   border:2px solid #dfe8ff;font-size:13px;
 }
 
-/* AVATAR */
-.ava{
-  width:44px;height:44px;border-radius:999px;
-  object-fit:cover;border:2px solid #e2e8f0;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-}
+/* FOTO DINONAKTIFKAN */
+.ava{ display:none !important; }
 
 /* ROLE BADGE */
 .badge-role{
@@ -272,10 +268,6 @@
             </div>
           </td>
 
-          <td data-label="Foto">
-          <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
-        </td>
-
           <td data-label="Jabatan">
             <span class="badge-role">{{ $i->jabatan }}</span>
           </td>
@@ -391,16 +383,7 @@
                       <input type="number" name="urutan" class="form-control" value="{{ $i->urutan }}">
                       <div class="small text-muted mt-1">Semakin kecil, semakin atas.</div>
                     </div>
-
-                    <div class="col-md-3">
-                      <label class="form-label fw-semibold">Foto (opsional)</label>
-                    
-                      {{-- <input type="file" name="foto" class="form-control"> --}}
-                      {{-- @if($i->foto)
-                          <img src="..." class="ava mt-2" alt="current">
-                      @endif --}}
-                    
-                      <div class="text-muted small">Fitur foto dinonaktifkan.</div>
+                    </div>
                     </div>
 
                 <div class="modal-footer">
@@ -538,11 +521,7 @@
               <input type="number" name="urutan" class="form-control" value="0">
               <div class="small text-muted mt-1">Semakin kecil, semakin atas.</div>
             </div>
-
-            <div class="col-md-3">
-          <label class="form-label fw-semibold">Foto (opsional)</label>
-          {{-- <input type="file" name="foto" class="form-control"> --}}
-          <div class="text-muted small">Fitur foto dinonaktifkan.</div>
+            </div>
         </div>
 
         <div class="modal-footer">
