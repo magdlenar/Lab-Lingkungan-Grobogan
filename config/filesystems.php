@@ -55,8 +55,8 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true, // ⬅️ PENTING
-            'throw' => false,
             'report' => false,
+            'throw' => true,
         ],
 
     ],
