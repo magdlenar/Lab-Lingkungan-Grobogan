@@ -211,9 +211,12 @@
   height:var(--stroke);
   background:var(--line);
 }
+/* ===== ROW SPLIT (percabangan 2 box) ===== */
 .row-split > .child{
   position:relative;
 }
+
+/* ⛔️ yang lama (hapus/replace)
 .row-split > .child::before{
   content:"";
   position:absolute;
@@ -222,6 +225,19 @@
   transform:translateX(-50%);
   width:var(--stroke);
   height:var(--split-y);
+  background:var(--line);
+}
+*/
+
+/* ✅ yang baru: garis vertikal ditarik ke atas sampai nyambung ke garis horizontal */
+.row-split > .child::before{
+  content:"";
+  position:absolute;
+  top: calc(-1 * var(--split-y));   /* <-- kunci: naik ke atas */
+  left:50%;
+  transform:translateX(-50%);
+  width:var(--stroke);
+  height: var(--split-y);
   background:var(--line);
 }
 
@@ -276,11 +292,11 @@
 .sub-split > .node.sm::before{
   content:"";
   position:absolute;
-  top:0;
+  top: calc(-1 * var(--split-y));   /* <-- kunci */
   left:50%;
   transform:translateX(-50%);
   width:var(--stroke);
-  height:var(--split-y);
+  height: var(--split-y);
   background:var(--line);
 }
 
