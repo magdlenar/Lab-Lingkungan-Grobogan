@@ -246,7 +246,6 @@
       <thead>
         <tr>
           <th style="width:60px;">No</th>
-          <th style="width:90px;">Foto</th>
           <th>Jabatan</th>
           <th>Nama</th>
           <th>Parent (Atasan)</th>
