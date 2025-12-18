@@ -105,7 +105,7 @@ class StrukturOrganisasiController extends Controller
     public function destroy(StrukturOrganisasi $struktur)
     {
         if($struktur->foto){
-            Storage::disk('public')->delete($struktur->foto);
+            Storage::disk('s3')->delete($struktur->foto);
         }
         $struktur->delete();
 
