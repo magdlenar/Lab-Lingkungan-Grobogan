@@ -196,10 +196,41 @@ class UjiController extends Controller
             abort(404, "File tidak ditemukan.");
         }
     
-        // ✅ download langsung dari Backblaze B2 (disk s3)
-        return Storage::disk('s3')->download($req->letter_file);
+        $key = ltrim($req->letter_file, '/');
+        $key = Str::replaceFirst('storage/', '', $key);
+    
+        if (!Storage::disk('s3')->exists($key)) {
+            abort(404, "File tidak ditemukan di Backblaze.");
+        }
+    
+        // ✅ fallback mime dari ekstensi (karena mimeType() kadang gagal di B2)
+        $ext = strtolower(pathinfo($key, PATHINFO_EXTENSION));
+        $mimeMap = [
+            'pdf'  => 'application/pdf',
+            'png'  => 'image/png',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'webp' => 'image/webp',
+            'doc'  => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls'  => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
+        $mime = $mimeMap[$ext] ?? 'application/octet-stream';
+    
+        // ✅ stream dari S3, tanpa memaksa ambil mime metadata
+        $stream = Storage::disk('s3')->readStream($key);
+        if (!$stream) {
+            abort(500, "Gagal membaca file dari Backblaze.");
+        }
+    
+        return response()->streamDownload(function () use ($stream) {
+            fpassthru($stream);
+            if (is_resource($stream)) fclose($stream);
+        }, basename($key), [
+            'Content-Type' => $mime,
+        ]);
     }
-
     // ============= UPDATE STATUS =================
     public function updateStatus(Request $request, $id)
     {
