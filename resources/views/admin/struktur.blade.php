@@ -3,9 +3,9 @@
 
 @section('content')
 
-@php
+{{-- @php
   use Illuminate\Support\Facades\Storage;
-@endphp
+@endphp --}}
 
 <style>
 /* ===================== SENADA DENGAN GALERI / AKUN TERDAFTAR ===================== */
@@ -273,13 +273,8 @@
           </td>
 
           <td data-label="Foto">
-            @php
-              $fotoUrl = $i->foto
-                ? Storage::disk('s3')->temporaryUrl($i->foto, now()->addMinutes(10))
-                : asset('images/default-user.png');
-            @endphp
-            <img class="ava" src="{{ $fotoUrl }}" alt="foto">
-          </td>
+          <img class="ava" src="{{ asset('images/default-user.png') }}" alt="foto">
+        </td>
 
           <td data-label="Jabatan">
             <span class="badge-role">{{ $i->jabatan }}</span>
@@ -399,14 +394,15 @@
 
                     <div class="col-md-3">
                       <label class="form-label fw-semibold">Foto (opsional)</label>
-                      <input type="file" name="foto" class="form-control">
-                      @if($i->foto)
-                        @php $currentFoto = Storage::disk('s3')->temporaryUrl($i->foto, now()->addMinutes(10)); @endphp
-                        <img src="{{ $currentFoto }}" class="ava mt-2" alt="current">
-                      @endif
+                    
+                      {{-- <input type="file" name="foto" class="form-control"> --}}
+                      {{-- @if($i->foto)
+                          <img src="..." class="ava mt-2" alt="current">
+                      @endif --}}
+                    
+                      <div class="text-muted small">Fitur foto dinonaktifkan.</div>
                     </div>
-                  </div>
-                </div>
+
                 <div class="modal-footer">
                   <button class="btn btn-success w-100" style="border-radius:12px;font-weight:800;">
                     <i class="bi bi-save me-1"></i> Simpan
@@ -544,10 +540,9 @@
             </div>
 
             <div class="col-md-3">
-              <label class="form-label fw-semibold">Foto (opsional)</label>
-              <input type="file" name="foto" class="form-control">
-            </div>
-          </div>
+          <label class="form-label fw-semibold">Foto (opsional)</label>
+          {{-- <input type="file" name="foto" class="form-control"> --}}
+          <div class="text-muted small">Fitur foto dinonaktifkan.</div>
         </div>
 
         <div class="modal-footer">
