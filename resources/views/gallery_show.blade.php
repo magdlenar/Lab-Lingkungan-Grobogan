@@ -3,6 +3,7 @@
 
 @section('content')
 @php
+    use Illuminate\Support\Facades\Storage;
     use Illuminate\Support\Str;
 
     // Optional related list (kalau controller ngirim)
@@ -10,7 +11,6 @@
 
     // fallback kalau belum ada related dari controller:
     if($relatedGaleri->isEmpty()){
-        // ambil 4 artikel terbaru selain artikel yang sedang dibuka
         try {
             $relatedGaleri = \App\Models\Galeri::where('id','!=',$galeri->id)
                                 ->latest()
@@ -20,9 +20,29 @@
             $relatedGaleri = collect();
         }
     } else {
-        // pastikan urut terbaru juga kalau dikirim dari controller
         $relatedGaleri = $relatedGaleri->sortByDesc('created_at')->take(4);
     }
+
+    // ✅ helper URL gambar Backblaze (private/public sama-sama aman)
+    $b2Img = function ($path) {
+        if (empty($path)) return null;
+
+        // kalau sudah full URL, pakai langsung
+        if (Str::startsWith($path, ['http://','https://'])) return $path;
+
+        // bersihin kalau ada prefix "storage/"
+        $key = ltrim($path, '/');
+        $key = Str::replaceFirst('storage/', '', $key);
+
+        try {
+            // bucket private -> signed url
+            return Storage::disk('s3')->temporaryUrl($key, now()->addMinutes(30));
+        } catch (\Throwable $e) {
+            return null;
+        }
+    };
+
+    $heroImg = $b2Img($galeri->gambar ?? null);
 @endphp
 
 <style>
@@ -273,9 +293,9 @@
             </div>
 
             {{-- Hero Image --}}
-            @if($galeri->gambar)
+            @if($heroImg)
                 <div class="hero-frame">
-                    <img src="{{ asset('storage/'.$galeri->gambar) }}" class="hero-img" alt="hero">
+                    <img src="{{ $heroImg }}" class="hero-img" alt="hero">
                 </div>
             @endif
 
@@ -339,10 +359,11 @@
 
                 <div class="d-flex flex-column gap-2">
                     @forelse($relatedGaleri as $r)
+                        @php $relImg = $b2Img($r->gambar ?? null); @endphp
                         <a href="{{ route('galeri.show',$r->slug) }}" class="text-decoration-none text-dark">
                             <div class="related-item">
-                                @if($r->gambar)
-                                    <img src="{{ asset('storage/'.$r->gambar) }}" class="related-thumb" alt="related">
+                                @if($relImg)
+                                    <img src="{{ $relImg }}" class="related-thumb" alt="related">
                                 @else
                                     <div class="related-thumb d-flex align-items-center justify-content-center text-muted">
                                         No Image
