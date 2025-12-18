@@ -322,13 +322,22 @@ public function updateLabDocuments(Request $request)
 
     // SOP
     if ($request->hasFile('sop_file')) {
-            if ($doc->sop_file) {
+           if ($doc->sop_file) {
         try {
             Storage::disk('s3')->delete($doc->sop_file);
         } catch (\Throwable $e) {
             \Log::warning('Gagal hapus SOP lama di S3: '.$doc->sop_file.' | '.$e->getMessage());
         }
     }
+
+    try {
+        // bisa pakai private agar aman
+        $doc->sop_file = Storage::disk('s3')->putFile('lab_docs', $request->file('sop_file'), 'private');
+    } catch (\Throwable $e) {
+        \Log::error('Gagal upload SOP ke S3: '.$e->getMessage());
+        return back()->withErrors(['sop_file' => 'Upload gagal. Cek konfigurasi Backblaze B2 (S3).']);
+    }
+}
     $doc->sop_file = $request->file('sop_file')->store('lab_docs', 's3');
     }
 
