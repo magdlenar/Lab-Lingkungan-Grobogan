@@ -193,30 +193,20 @@
       @forelse($galeris as $gal)
         <div class="col-12 col-md-6 col-lg-3">
           <div class="gallery-preview-card">
-
             @php
               $imgUrl = null;
             
               if (!empty($gal->gambar)) {
-                // bersihkan path (kalau ada storage/)
                 $key = ltrim($gal->gambar, '/');
                 $key = \Illuminate\Support\Str::replaceFirst('storage/', '', $key);
             
-                // pakai URL public Backblaze
-                $imgUrl = Storage::disk('s3')->url($key);
+                try {
+                  $imgUrl = Storage::disk('s3')->temporaryUrl($key, now()->addMinutes(30));
+                } catch (\Throwable $e) {
+                  $imgUrl = null;
+                }
               }
             @endphp
-            
-            @if($imgUrl)
-              <img src="{{ $imgUrl }}"
-                   class="gallery-thumb"
-                   alt="{{ $gal->judul }}">
-            @else
-              <div class="gallery-thumb d-flex align-items-center justify-content-center text-muted">
-                Tidak ada gambar
-              </div>
-            @endif
-
             <div class="gallery-body">
               <span class="gallery-badge">
                 <i class="bi bi-bookmark-check"></i> Artikel Galeri
