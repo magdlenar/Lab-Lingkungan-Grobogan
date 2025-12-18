@@ -263,15 +263,17 @@
         <h5 class="modal-title fw-semibold">SOP Laboratorium</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
-        @php $sopUrl = !empty($labDoc?->sop_file) ? asset('storage/'.$labDoc->sop_file) : null; @endphp
 
-        @if($sopUrl)
-          <iframe src="{{ $sopUrl }}" style="width:100%; height:75vh; border:0;"></iframe>
+      <div class="modal-body">
+        @if(!empty($labDoc?->sop_file))
+          {{-- VIEW lewat backend (S3 private) --}}
+          <iframe src="{{ route('dokumenlab.view','sop') }}"
+                  style="width:100%; height:75vh; border:0;"></iframe>
         @else
           <div class="text-muted">Dokumen belum tersedia.</div>
         @endif
       </div>
+
       <div class="modal-footer">
         @if(!empty($labDoc?->sop_file))
           <a class="btn btn-success" href="{{ route('dokumenlab.download','sop') }}">
@@ -292,15 +294,17 @@
         <h5 class="modal-title fw-semibold">SK SOP Pengambilan dan Pengujian Contoh Uji</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
-        @php $skUrl = !empty($labDoc?->sk_sop_file) ? asset('storage/'.$labDoc->sk_sop_file) : null; @endphp
 
-        @if($skUrl)
-          <iframe src="{{ $skUrl }}" style="width:100%; height:75vh; border:0;"></iframe>
+      <div class="modal-body">
+        @if(!empty($labDoc?->sk_sop_file))
+          {{-- VIEW lewat backend (S3 private) --}}
+          <iframe src="{{ route('dokumenlab.view','sk') }}"
+                  style="width:100%; height:75vh; border:0;"></iframe>
         @else
           <div class="text-muted">Dokumen belum tersedia.</div>
         @endif
       </div>
+
       <div class="modal-footer">
         @if(!empty($labDoc?->sk_sop_file))
           <a class="btn btn-success" href="{{ route('dokumenlab.download','sk') }}">
