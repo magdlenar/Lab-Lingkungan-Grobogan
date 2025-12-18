@@ -2,6 +2,11 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+  use Illuminate\Support\Facades\Storage;
+  use Illuminate\Support\Str;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,9 +194,21 @@
         <div class="col-12 col-md-6 col-lg-3">
           <div class="gallery-preview-card">
 
-            {{-- ✅ GAMBAR ARTIKEL --}}
-            @if(!empty($gal->gambar))
-              <img src="{{ asset('storage/'.$gal->gambar) }}"
+            @php
+              $imgUrl = null;
+            
+              if (!empty($gal->gambar)) {
+                // bersihkan path (kalau ada storage/)
+                $key = ltrim($gal->gambar, '/');
+                $key = \Illuminate\Support\Str::replaceFirst('storage/', '', $key);
+            
+                // pakai URL public Backblaze
+                $imgUrl = Storage::disk('s3')->url($key);
+              }
+            @endphp
+            
+            @if($imgUrl)
+              <img src="{{ $imgUrl }}"
                    class="gallery-thumb"
                    alt="{{ $gal->judul }}">
             @else
