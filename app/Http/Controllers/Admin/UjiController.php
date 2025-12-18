@@ -191,18 +191,13 @@ class UjiController extends Controller
     public function downloadFile($id)
     {
         $req = TestRequest::findOrFail($id);
-
+    
         if (!$req->letter_file) {
             abort(404, "File tidak ditemukan.");
         }
-
-        $path = storage_path("app/public/" . $req->letter_file);
-
-        if (!file_exists($path)) {
-            abort(404, "File tidak ditemukan di server.");
-        }
-
-        return response()->download($path);
+    
+        // ✅ download langsung dari Backblaze B2 (disk s3)
+        return Storage::disk('s3')->download($req->letter_file);
     }
 
     // ============= UPDATE STATUS =================
@@ -261,14 +256,14 @@ class UjiController extends Controller
     public function destroy($id)
     {
         $uji = TestRequest::findOrFail($id);
-
-        // HAPUS FILE jika ada
-        if ($uji->letter_file && Storage::exists('public/' . $uji->letter_file)) {
-            Storage::delete('public/' . $uji->letter_file);
+    
+        // ✅ HAPUS FILE di Backblaze B2 jika ada
+        if ($uji->letter_file && Storage::disk('s3')->exists($uji->letter_file)) {
+            Storage::disk('s3')->delete($uji->letter_file);
         }
-
+    
         $uji->delete();
-
+    
         return back()->with('success', 'Data permintaan uji berhasil dihapus.');
     }
 
