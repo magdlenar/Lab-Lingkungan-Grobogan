@@ -320,7 +320,7 @@ public function updateLabDocuments(Request $request)
         'sk_sop_file' => 'nullable|mimes:pdf,jpg,png|max:5120',
     ]);
 
-    // === SOP ===
+    // SOP
     if ($request->hasFile('sop_file')) {
         if ($doc->sop_file) {
             try {
@@ -331,17 +331,14 @@ public function updateLabDocuments(Request $request)
         }
 
         try {
-            $doc->sop_file = Storage::disk('s3')
-                ->putFile('lab_docs', $request->file('sop_file'));
+            $doc->sop_file = Storage::disk('s3')->putFile('lab_docs', $request->file('sop_file'));
         } catch (\Throwable $e) {
             \Log::error('Upload SOP gagal: '.$e->getMessage());
-            return back()->withErrors([
-                'sop_file' => 'Upload SOP gagal. Cek setting Backblaze.'
-            ]);
+            return back()->withErrors(['sop_file' => 'Upload SOP gagal. Cek setting Backblaze / permission key.']);
         }
     }
 
-    // === SK SOP ===
+    // SK SOP
     if ($request->hasFile('sk_sop_file')) {
         if ($doc->sk_sop_file) {
             try {
@@ -352,18 +349,14 @@ public function updateLabDocuments(Request $request)
         }
 
         try {
-            $doc->sk_sop_file = Storage::disk('s3')
-                ->putFile('lab_docs', $request->file('sk_sop_file'));
+            $doc->sk_sop_file = Storage::disk('s3')->putFile('lab_docs', $request->file('sk_sop_file'));
         } catch (\Throwable $e) {
             \Log::error('Upload SK SOP gagal: '.$e->getMessage());
-            return back()->withErrors([
-                'sk_sop_file' => 'Upload SK SOP gagal.'
-            ]);
+            return back()->withErrors(['sk_sop_file' => 'Upload SK SOP gagal.']);
         }
     }
 
     $doc->save();
-
     return back()->with('success', 'Dokumen SOP berhasil diperbarui.');
 }
 
