@@ -320,39 +320,45 @@ public function updateLabDocuments(Request $request)
         'sk_sop_file' => 'nullable|mimes:pdf,jpg,png|max:5120',
     ]);
 
-    // SOP
+    // === SOP ===
     if ($request->hasFile('sop_file')) {
         if ($doc->sop_file) {
             try {
                 Storage::disk('s3')->delete($doc->sop_file);
             } catch (\Throwable $e) {
-                \Log::warning('Gagal hapus SOP lama di S3: '.$doc->sop_file.' | '.$e->getMessage());
+                \Log::warning('Gagal hapus SOP lama: '.$e->getMessage());
             }
         }
 
         try {
-            $doc->sop_file = Storage::disk('s3')->putFile('lab_docs', $request->file('sop_file'), 'private');
+            $doc->sop_file = Storage::disk('s3')
+                ->putFile('lab_docs', $request->file('sop_file'));
         } catch (\Throwable $e) {
-            \Log::error('Gagal upload SOP ke S3: '.$e->getMessage());
-            return back()->withErrors(['sop_file' => 'Upload SOP gagal. Cek setting Backblaze B2 (S3).']);
+            \Log::error('Upload SOP gagal: '.$e->getMessage());
+            return back()->withErrors([
+                'sop_file' => 'Upload SOP gagal. Cek setting Backblaze.'
+            ]);
         }
     }
 
-    // SK SOP
+    // === SK SOP ===
     if ($request->hasFile('sk_sop_file')) {
         if ($doc->sk_sop_file) {
             try {
                 Storage::disk('s3')->delete($doc->sk_sop_file);
             } catch (\Throwable $e) {
-                \Log::warning('Gagal hapus SK SOP lama di S3: '.$doc->sk_sop_file.' | '.$e->getMessage());
+                \Log::warning('Gagal hapus SK SOP lama: '.$e->getMessage());
             }
         }
 
         try {
-            $doc->sk_sop_file = Storage::disk('s3')->putFile('lab_docs', $request->file('sk_sop_file'), 'private');
+            $doc->sk_sop_file = Storage::disk('s3')
+                ->putFile('lab_docs', $request->file('sk_sop_file'));
         } catch (\Throwable $e) {
-            \Log::error('Gagal upload SK SOP ke S3: '.$e->getMessage());
-            return back()->withErrors(['sk_sop_file' => 'Upload SK SOP gagal. Cek setting Backblaze B2 (S3).']);
+            \Log::error('Upload SK SOP gagal: '.$e->getMessage());
+            return back()->withErrors([
+                'sk_sop_file' => 'Upload SK SOP gagal.'
+            ]);
         }
     }
 
