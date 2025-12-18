@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\IkuController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\TentangController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Storage;
 
 // ================= STATIC PAGE ================
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -25,16 +26,22 @@ Route::get('/layanan', [HomeController::class, 'layanan'])->name('layanan');
 Route::get('/dokumen-lab/{type}/download', function ($type) {
     $doc = \App\Models\LabDocument::firstOrFail();
 
-    $file = null;
-    if ($type === 'sop') $file = $doc->sop_file;
-    if ($type === 'sk')  $file = $doc->sk_sop_file;
+    $file = match ($type) {
+        'sop' => $doc->sop_file,
+        'sk'  => $doc->sk_sop_file,
+        default => null,
+    };
 
-    if (!$file) abort(404, 'File belum tersedia.');
+    if (!$file) {
+        abort(404, 'File belum tersedia.');
+    }
 
-    $path = storage_path('app/public/' . $file);
-    if (!file_exists($path)) abort(404, 'File tidak ditemukan di server.');
+    // kalau file private, download HARUS lewat backend seperti ini
+    if (!Storage::disk('s3')->exists($file)) {
+        abort(404, 'File tidak ditemukan di Backblaze.');
+    }
 
-    return response()->download($path);
+    return Storage::disk('s3')->download($file);
 })->name('dokumenlab.download');
 
 // ================= GUEST =====================
