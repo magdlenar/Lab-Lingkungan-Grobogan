@@ -43,6 +43,31 @@ Route::get('/dokumen-lab/{type}/download', function ($type) {
 
     return Storage::disk('s3')->download($file);
 })->name('dokumenlab.download');
+Route::get('/dokumen-lab/{type}/view', function ($type) {
+    $doc = \App\Models\LabDocument::firstOrFail();
+
+    $file = match ($type) {
+        'sop' => $doc->sop_file,
+        'sk'  => $doc->sk_sop_file,
+        default => null,
+    };
+
+    abort_if(!$file, 404, 'File belum tersedia.');
+    abort_if(!Storage::disk('s3')->exists($file), 404, 'File tidak ditemukan di Backblaze.');
+
+    // ambil isi file dari S3 lalu tampilkan di browser
+    $stream = Storage::disk('s3')->readStream($file);
+
+    $mime = Storage::disk('s3')->mimeType($file) ?? 'application/octet-stream';
+
+    return response()->stream(function () use ($stream) {
+        fpassthru($stream);
+        if (is_resource($stream)) fclose($stream);
+    }, 200, [
+        'Content-Type' => $mime,
+        'Content-Disposition' => 'inline; filename="'.basename($file).'"',
+    ]);
+})->name('dokumenlab.view');
 
 // ================= GUEST =====================
 Route::middleware('guest')->group(function () {
