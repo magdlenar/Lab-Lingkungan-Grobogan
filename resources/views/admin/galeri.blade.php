@@ -402,22 +402,18 @@
                     <td data-label="Gambar">
                         @php
                           $imgUrl = null;
-                        
                           if (!empty($g->gambar)) {
-                            // kalau sudah full URL, pakai langsung
-                            if (Str::startsWith($g->gambar, ['http://','https://'])) {
-                              $imgUrl = $g->gambar;
-                            } else {
-                              $imgUrl = Storage::disk('s3')->url($g->gambar);
-                            }
+                            $key = \Illuminate\Support\Str::replaceFirst('storage/', '', ltrim($g->gambar, '/'));
+                            $imgUrl = Storage::disk('s3')->url($key); // karena kita set public
                           }
                         @endphp
-    
+                        
                         @if($imgUrl)
                           <img src="{{ $imgUrl }}" class="thumb" alt="thumb">
                         @else
                           <div class="text-muted small">Tidak ada gambar</div>
                         @endif
+
                     </td>
 
                     <td data-label="Judul">
@@ -491,11 +487,19 @@
                                             <input type="file" name="gambar" class="form-control" accept="image/*">
                                             @if(!empty($g->gambar))
                                               @php
-                                                $currentImg = Str::startsWith($g->gambar, ['http://','https://'])
-                                                  ? $g->gambar
-                                                  : Storage::disk('s3')->url($g->gambar); // ✅ S3/Backblaze
+                                                $currentImg = null;
+                                            
+                                                if (\Illuminate\Support\Str::startsWith($g->gambar, ['http://','https://'])) {
+                                                  $currentImg = $g->gambar;
+                                                } else {
+                                                  $key = \Illuminate\Support\Str::replaceFirst('storage/', '', ltrim($g->gambar, '/'));
+                                                  $currentImg = Storage::disk('s3')->url($key); // ✅ public file
+                                                }
                                               @endphp
-                                              <img src="{{ $currentImg }}" class="thumb mt-2" alt="current">
+                                            
+                                              @if($currentImg)
+                                                <img src="{{ $currentImg }}" class="thumb mt-2" alt="current">
+                                              @endif
                                             @endif
                                         </div>
 
