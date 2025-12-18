@@ -24,7 +24,7 @@ class TestRequestController extends Controller
             'letter_file' => 'required|mimes:pdf,jpg,png|max:6144'
         ]);
 
-        $file = $request->file('letter_file')->store('permohonan', 'public');
+        $file = $request->file('letter_file')->store('permohonan', 's3');
 
         TestRequest::create([
             'user_id' => Auth::id(),
@@ -79,11 +79,11 @@ class TestRequestController extends Controller
         // jika user upload ulang surat
         if ($request->hasFile('letter_file')) {
             // hapus file lama
-            if ($req->letter_file && Storage::disk('public')->exists($req->letter_file)) {
-                Storage::disk('public')->delete($req->letter_file);
+            if ($req->letter_file && Storage::disk('s3')->exists($req->letter_file)) {
+                Storage::disk('s3')->delete($req->letter_file);
             }
 
-            $req->letter_file = $request->file('letter_file')->store('permohonan', 'public');
+            $req->letter_file = $request->file('letter_file')->store('permohonan', 's3');
         }
 
         // setelah diperbaiki, kembalikan ke pemeriksaan
@@ -100,18 +100,13 @@ class TestRequestController extends Controller
         $req = TestRequest::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
-
+    
         if (!$req->pickup_letter_file) {
             abort(404, "Surat pengambilan sampel belum tersedia.");
         }
-
-        $filePath = storage_path('app/public/' . $req->pickup_letter_file);
-
-        if (!file_exists($filePath)) {
-            abort(404, "File tidak ditemukan di server.");
-        }
-
-        return response()->download($filePath);
+    
+        // ✅ ambil file langsung dari Backblaze B2 (disk s3)
+        return Storage::disk('s3')->download($req->pickup_letter_file);
     }
 
 
