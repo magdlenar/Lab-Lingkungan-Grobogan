@@ -74,7 +74,7 @@ class StrukturOrganisasiController extends Controller
         'nama'           => ['required','string','max:255'],
         'urutan'         => ['nullable','integer','min:0'],
         'parent_id'      => ['nullable','exists:struktur_organisasis,id'],
-        'foto'           => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
+        'foto'           => ['nullable','image','mimes:jpg,jpeg,png,webp','max:5120'],
     ]);
 
     $jabatanSelect = (string) $request->input('jabatan_select');
