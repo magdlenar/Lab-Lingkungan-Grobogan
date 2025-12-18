@@ -57,7 +57,7 @@ class StrukturOrganisasiController extends Controller
     $data['jabatan'] = $jabatan;
 
     if ($request->hasFile('foto')) {
-        $data['foto'] = $request->file('foto')->store('struktur', 'public');
+        $data['foto'] = $request->file('foto')->store('struktur', 's3');
     }
 
     StrukturOrganisasi::create($data);
@@ -93,8 +93,8 @@ class StrukturOrganisasiController extends Controller
     $data['jabatan'] = $jabatan;
 
     if ($request->hasFile('foto')) {
-        if ($struktur->foto) Storage::disk('public')->delete($struktur->foto);
-        $data['foto'] = $request->file('foto')->store('struktur', 'public');
+        if ($struktur->foto) Storage::disk('s3')->delete($struktur->foto);
+        $data['foto'] = $request->file('foto')->store('struktur', 's3');
     }
 
     $struktur->update($data);
