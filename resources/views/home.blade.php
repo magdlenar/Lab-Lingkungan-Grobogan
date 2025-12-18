@@ -193,46 +193,54 @@
       @forelse($galeris as $gal)
         <div class="col-12 col-md-6 col-lg-3">
           <div class="gallery-preview-card">
-            @php
-              $imgUrl = null;
+              @php
+                $imgUrl = null;
             
-              if (!empty($gal->gambar)) {
-                $key = ltrim($gal->gambar, '/');
-                $key = \Illuminate\Support\Str::replaceFirst('storage/', '', $key);
+                if (!empty($gal->gambar)) {
+                  $key = ltrim($gal->gambar, '/');
+                  $key = \Illuminate\Support\Str::replaceFirst('storage/', '', $key);
             
-                try {
-                  $imgUrl = Storage::disk('s3')->temporaryUrl($key, now()->addMinutes(30));
-                } catch (\Throwable $e) {
-                  $imgUrl = null;
+                  try {
+                    $imgUrl = Storage::disk('s3')->temporaryUrl($key, now()->addMinutes(30));
+                  } catch (\Throwable $e) {
+                    $imgUrl = null;
+                  }
                 }
-              }
-            @endphp
-            <div class="gallery-body">
-              <span class="gallery-badge">
-                <i class="bi bi-bookmark-check"></i> Artikel Galeri
-              </span>
-
-              <h5 class="gallery-title clamp-2">
-                {{ $gal->judul }}
-              </h5>
-
-              <p class="gallery-excerpt clamp-3">
-                {{ \Illuminate\Support\Str::limit(strip_tags($gal->deskripsi ?? ''), 110) }}
-              </p>
-
-              <div class="gallery-meta">
-                <i class="bi bi-calendar3"></i>
-                {{ optional($gal->created_at)->translatedFormat('d F Y') ?? '-' }}
+              @endphp
+            
+              {{-- ✅ GAMBAR ARTIKEL --}}
+              @if($imgUrl)
+                <img src="{{ $imgUrl }}" class="gallery-thumb" alt="{{ $gal->judul }}">
+              @else
+                <div class="gallery-thumb d-flex align-items-center justify-content-center text-muted">
+                  Tidak ada gambar
+                </div>
+              @endif
+            
+              <div class="gallery-body">
+                <span class="gallery-badge">
+                  <i class="bi bi-bookmark-check"></i> Artikel Galeri
+                </span>
+            
+                <h5 class="gallery-title clamp-2">{{ $gal->judul }}</h5>
+            
+                <p class="gallery-excerpt clamp-3">
+                  {{ \Illuminate\Support\Str::limit(strip_tags($gal->deskripsi ?? ''), 110) }}
+                </p>
+            
+                <div class="gallery-meta">
+                  <i class="bi bi-calendar3"></i>
+                  {{ optional($gal->created_at)->translatedFormat('d F Y') ?? '-' }}
+                </div>
+            
+                <div class="gallery-read">
+                  Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                </div>
               </div>
-
-              <div class="gallery-read">
-                Baca Selengkapnya <i class="bi bi-arrow-right"></i>
-              </div>
+            
+              <a href="{{ route('galeri.show',$gal->slug) }}" class="stretched-link"></a>
             </div>
 
-            {{-- LINK --}}
-            <a href="{{ route('galeri.show',$gal->slug) }}" class="stretched-link"></a>
-          </div>
         </div>
       @empty
         <div class="col-12">
