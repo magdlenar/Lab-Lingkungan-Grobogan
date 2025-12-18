@@ -210,7 +210,7 @@ public function printList(Request $request)
         ]);
 
         $file = $request->file('result_file');
-        $path = $file->store('hasil_uji', 'public');
+        $path = $file->store('hasil_uji', 's3');
 
         $result = TestResult::firstOrCreate(
             ['test_request_id' => $req->id],
@@ -218,8 +218,8 @@ public function printList(Request $request)
         );
 
         // hapus file lama kalau ada
-        if($result->result_file && Storage::disk('public')->exists($result->result_file)){
-            Storage::disk('public')->delete($result->result_file);
+        if($result->result_file && Storage::disk('s3')->exists($result->result_file)){
+            Storage::disk('s3')->delete($result->result_file);
         }
 
         $result->result_file = $path;
@@ -241,17 +241,11 @@ public function printList(Request $request)
     {
         $req = TestRequest::with('result')->findOrFail($test_request_id);
 
-        if(!$req->result || !$req->result->result_file){
-            abort(404,'File tidak ditemukan.');
-        }
+    if(!$req->result || !$req->result->result_file){
+        abort(404,'File tidak ditemukan.');
+    }
 
-        // ambil path asli di storage
-        $filePath = storage_path('app/public/' . $req->result->result_file);
-
-        if (!file_exists($filePath)) {
-            abort(404, 'File tidak ditemukan di server.');
-        }
-
-        return response()->download($filePath);
+    // ambil file langsung dari Backblaze (disk s3), bukan storage lokal
+    return Storage::disk('s3')->download($req->result->result_file);
     }
 }
