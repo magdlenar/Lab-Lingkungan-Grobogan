@@ -402,9 +402,16 @@
                     <td data-label="Gambar">
                         @php
                           $imgUrl = null;
+                        
                           if (!empty($g->gambar)) {
-                            $key = \Illuminate\Support\Str::replaceFirst('storage/', '', ltrim($g->gambar, '/'));
-                            $imgUrl = Storage::disk('s3')->url($key); // karena kita set public
+                            try {
+                              $imgUrl = Storage::disk('s3')->temporaryUrl(
+                                $g->gambar,
+                                now()->addMinutes(30)
+                              );
+                            } catch (\Throwable $e) {
+                              $imgUrl = null;
+                            }
                           }
                         @endphp
                         
@@ -413,7 +420,6 @@
                         @else
                           <div class="text-muted small">Tidak ada gambar</div>
                         @endif
-
                     </td>
 
                     <td data-label="Judul">
