@@ -241,13 +241,13 @@ class UjiController extends Controller
                 ]);
 
                 // hapus file lama jika ada
-                if ($req->pickup_letter_file && Storage::disk('public')->exists($req->pickup_letter_file)) {
-                    Storage::disk('public')->delete($req->pickup_letter_file);
+                if ($req->pickup_letter_file && Storage::disk('s3')->exists($req->pickup_letter_file)) {
+                    Storage::disk('s3')->delete($req->pickup_letter_file);
                 }
 
                 // simpan file baru
                 $req->pickup_letter_file = $request->file('pickup_letter_file')
-                    ->store('pickup_letters', 'public');
+                    ->store('pickup_letters', 's3');
             }
         }
 
@@ -290,40 +290,32 @@ class UjiController extends Controller
 }
 
 public function downloadHasilUji($id)
-{
-    $req = TestRequest::with('result')
-        ->where('id', $id)
-        ->where('user_id', Auth::id())
-        ->firstOrFail();
-
-    if (!$req->result || !$req->result->result_file) {
-        abort(404, "File hasil uji belum tersedia.");
+    {
+        $req = TestRequest::with('result')
+            ->where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+    
+        if (!$req->result || !$req->result->result_file) {
+            abort(404, "File hasil uji belum tersedia.");
+        }
+    
+        // ✅ ambil file langsung dari Backblaze B2
+        return Storage::disk('s3')->download($req->result->result_file);
     }
-
-    $filePath = storage_path('app/public/' . $req->result->result_file);
-
-    if (!file_exists($filePath)) {
-        abort(404, "File tidak ditemukan di server.");
-    }
-
-    return response()->download($filePath);
-}
+    
 public function downloadPickupLetter($id)
-{
-    $req = TestRequest::findOrFail($id);
-
-    if (!$req->pickup_letter_file) {
-        abort(404, "File tidak ditemukan.");
+    {
+        $req = TestRequest::findOrFail($id);
+    
+        if (!$req->pickup_letter_file) {
+            abort(404, "File tidak ditemukan.");
+        }
+    
+        // ✅ download dari Backblaze B2
+        return Storage::disk('s3')->download($req->pickup_letter_file);
     }
-
-    $path = storage_path("app/public/" . $req->pickup_letter_file);
-
-    if (!file_exists($path)) {
-        abort(404, "File tidak ditemukan di server.");
-    }
-
-    return response()->download($path);
-}
+    
 public function updateLabDocuments(Request $request)
 {
     $doc = LabDocument::first() ?? LabDocument::create([]);
@@ -335,18 +327,18 @@ public function updateLabDocuments(Request $request)
 
     // SOP
     if ($request->hasFile('sop_file')) {
-        if ($doc->sop_file && Storage::disk('public')->exists($doc->sop_file)) {
-            Storage::disk('public')->delete($doc->sop_file);
+        if ($doc->sop_file && Storage::disk('s3')->exists($doc->sop_file)) {
+            Storage::disk('s3')->delete($doc->sop_file);
         }
-        $doc->sop_file = $request->file('sop_file')->store('lab_docs', 'public');
+        $doc->sop_file = $request->file('sop_file')->store('lab_docs', 's3');
     }
 
     // SK SOP
     if ($request->hasFile('sk_sop_file')) {
-        if ($doc->sk_sop_file && Storage::disk('public')->exists($doc->sk_sop_file)) {
-            Storage::disk('public')->delete($doc->sk_sop_file);
+        if ($doc->sk_sop_file && Storage::disk('s3')->exists($doc->sk_sop_file)) {
+            Storage::disk('s3')->delete($doc->sk_sop_file);
         }
-        $doc->sk_sop_file = $request->file('sk_sop_file')->store('lab_docs', 'public');
+        $doc->sk_sop_file = $request->file('sk_sop_file')->store('lab_docs', 's3');
     }
 
     $doc->save();
