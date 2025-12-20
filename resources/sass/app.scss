@@ -900,6 +900,48 @@ footer .text-center {
         border-radius: 10px;
         cursor: pointer;
     }
+    /* Glass button putih (Lihat Layanan) */
+    .btn-glass-light{
+      background: rgba(255,255,255,0.18) !important;  /* transparan tapi tetap putih */
+      border: 1px solid rgba(255,255,255,0.35) !important;
+      color: #eaffea !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    /* Glass button hijau (Hubungi Kami) */
+    .btn-glass-green{
+      background: rgba(24,158,30,0.22) !important;    /* hijau transparan */
+      border: 1px solid rgba(187,247,208,0.35) !important;
+      color: #ffffff !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    /* Hover biar lebih hidup */
+    .btn-glass-light:hover{
+      background: rgba(255,255,255,0.28) !important;
+      transform: translateY(-2px);
+    }
+    .btn-glass-green:hover{
+      background: rgba(24,158,30,0.32) !important;
+      transform: translateY(-2px);
+    }
+    
+    /* Dropdown menu biar nyambung glass */
+    .dropdown-menu.glass-menu{
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .dropdown-menu.glass-menu .dropdown-item{
+      color: #e2e8f0;
+    }
+    .dropdown-menu.glass-menu .dropdown-item:hover{
+      background: rgba(255,255,255,0.10);
+      color: #ffffff;
+    }
 
     /* Button modern green */
     .btn-modern {
