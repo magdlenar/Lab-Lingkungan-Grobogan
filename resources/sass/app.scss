@@ -407,6 +407,22 @@ footer .text-center {
 }
 
 /* 🔹 Tambahan overlay gelap agar teks tetap terbaca */
+/* Naikkan konten hero sedikit supaya background/foto lebih kelihatan */
+.hero-lift{
+  padding-top: 60px;   /* atur sesuai kebutuhan */
+  padding-bottom: 80px;
+}
+
+/* Biar isi container tidak terlalu turun karena py-5 */
+.hero-lift .container{
+  padding-top: 10px !important;  /* override py-5 sedikit */
+}
+
+/* Alternatif tambahan: kalau masih kebanyakan turun, kecilkan h1/p */
+@media (max-width: 576px){
+  .hero-lift{ padding-top: 40px; padding-bottom: 60px; }
+}
+
 .hero-section::before {
   content: "";
   position: absolute;
