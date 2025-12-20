@@ -95,17 +95,17 @@
 
         <div class="d-flex justify-content-center flex-wrap gap-3">
           <a href="{{ url('/layanan') }}"
-             class="btn btn-light text-success btn-lg shadow-lg border-0">
+             class="btn btn-lg shadow-lg border-0 btn-glass-light">
             <i class="bi bi-card-checklist me-2"></i> Lihat Layanan
           </a>
-
-          <!-- ✅ DROPDOWN WHATSAPP -->
+        
           <div class="dropdown">
-            <button class="btn btn-success text-white btn-lg shadow-lg border-0 dropdown-toggle"
+            <button class="btn btn-lg shadow-lg border-0 dropdown-toggle btn-glass-green"
                     type="button" data-bs-toggle="dropdown">
               <i class="bi bi-whatsapp me-2"></i> Hubungi Kami
             </button>
-            <ul class="dropdown-menu shadow-sm border-0">
+        
+            <ul class="dropdown-menu shadow-sm border-0 glass-menu">
               <li>
                 <a href="https://wa.me/6281393395905" target="_blank"
                    class="dropdown-item d-flex align-items-center">
@@ -121,6 +121,7 @@
             </ul>
           </div>
         </div>
+
 
       </div>
     </div>
