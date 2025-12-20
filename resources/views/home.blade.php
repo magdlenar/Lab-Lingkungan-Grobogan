@@ -74,56 +74,111 @@
 <body>
 
 <!-- 🔹 HERO SECTION -->
-<section class="hero-section text-white d-flex align-items-center justify-content-center text-center">
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-md-7">
+<!-- 🔹 HERO SECTION (MODERN 2-COLUMN) -->
+<section class="hero-section text-white">
+  <div class="hero-overlay"></div>
 
-        <!-- badge kecil biar lebih hidup -->
-        <div class="hero-badge mx-auto">
-          <i class="bi bi-shield-check"></i> Layanan Resmi & Terpercaya
-        </div>
-
-        <h1 class="hero-title fw-bold">
-          <span class="lab">Laboratorium</span>
-          <span class="ling">Lingkungan</span>
-        </h1>
-
-        <p class="hero-sub lead">
-          Layanan pengujian & analisis kualitas lingkungan tepat, cepat, dan akurat
-          untuk mendukung kebijakan lingkungan di wilayah Grobogan.
-        </p>
-
-        <div class="d-flex justify-content-center flex-wrap gap-3">
-          <a href="{{ url('/layanan') }}"
-             class="btn btn-light text-success btn-lg shadow-lg border-0">
-            <i class="bi bi-card-checklist me-2"></i> Lihat Layanan
-          </a>
-
-          <!-- ✅ DROPDOWN WHATSAPP -->
-          <div class="dropdown">
-            <button class="btn btn-success text-white btn-lg shadow-lg border-0 dropdown-toggle"
-                    type="button" data-bs-toggle="dropdown">
-              <i class="bi bi-whatsapp me-2"></i> Hubungi Kami
-            </button>
-            <ul class="dropdown-menu shadow-sm border-0">
-              <li>
-                <a href="https://wa.me/6281393395905" target="_blank"
-                   class="dropdown-item d-flex align-items-center">
-                  <i class="bi bi-person-circle text-success me-2"></i> WhatsApp Admin 1
-                </a>
-              </li>
-              <li>
-                <a href="https://wa.me/6281325685066" target="_blank"
-                   class="dropdown-item d-flex align-items-center">
-                  <i class="bi bi-person-circle text-success me-2"></i> WhatsApp Admin 2
-                </a>
-              </li>
-            </ul>
+  <div class="container hero-wrap">
+    <div class="row align-items-center g-4">
+      
+      <!-- LEFT: Copy + CTA -->
+      <div class="col-lg-7">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <i class="bi bi-shield-check"></i> Layanan Resmi & Terpercaya
           </div>
-        </div>
 
+          <h1 class="hero-title fw-bold">
+            <span class="lab">Laboratorium</span>
+            <span class="ling">Lingkungan</span>
+          </h1>
+
+          <p class="hero-sub lead mb-4">
+            Layanan pengujian & analisis kualitas lingkungan tepat, cepat, dan akurat
+            untuk mendukung kebijakan lingkungan di wilayah Grobogan.
+          </p>
+
+          <div class="hero-actions d-flex flex-wrap gap-3">
+            <a href="{{ url('/layanan') }}"
+               class="btn btn-light text-success btn-lg shadow-sm border-0 px-4">
+              <i class="bi bi-card-checklist me-2"></i> Lihat Layanan
+            </a>
+
+            <div class="dropdown">
+              <button class="btn btn-success text-white btn-lg shadow-sm border-0 dropdown-toggle px-4"
+                      type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-whatsapp me-2"></i> Hubungi Kami
+              </button>
+              <ul class="dropdown-menu shadow border-0">
+                <li>
+                  <a href="https://wa.me/6281393395905" target="_blank"
+                     class="dropdown-item d-flex align-items-center">
+                    <i class="bi bi-person-circle text-success me-2"></i> WhatsApp Admin 1
+                  </a>
+                </li>
+                <li>
+                  <a href="https://wa.me/6281325685066" target="_blank"
+                     class="dropdown-item d-flex align-items-center">
+                    <i class="bi bi-person-circle text-success me-2"></i> WhatsApp Admin 2
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- mini stats (opsional, modern banget) -->
+          <div class="hero-stats mt-4">
+            <div class="hero-stat">
+              <div class="hero-stat-num">Cepat</div>
+              <div class="hero-stat-text">Proses terukur</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">Akurat</div>
+              <div class="hero-stat-text">Sesuai baku mutu</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">Resmi</div>
+              <div class="hero-stat-text">Instansi daerah</div>
+            </div>
+          </div>
+
+        </div>
       </div>
+
+      <!-- RIGHT: Glass Card / Visual -->
+      <div class="col-lg-5">
+        <div class="hero-glass">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="hero-icon">
+              <i class="bi bi-droplet"></i>
+            </div>
+            <div>
+              <div class="hero-glass-title">Uji Kualitas Air</div>
+              <div class="hero-glass-sub">pH • BOD • COD • TSS • DO</div>
+            </div>
+          </div>
+
+          <div class="hero-glass-list">
+            <div class="hero-glass-item">
+              <i class="bi bi-check2-circle"></i>
+              <span>Pengambilan sampel terarah</span>
+            </div>
+            <div class="hero-glass-item">
+              <i class="bi bi-check2-circle"></i>
+              <span>Analisis laboratorium terstandar</span>
+            </div>
+            <div class="hero-glass-item">
+              <i class="bi bi-check2-circle"></i>
+              <span>Laporan hasil rapi & mudah dipahami</span>
+            </div>
+          </div>
+
+          <a href="{{ route('uji.create') }}" class="btn btn-outline-light w-100 mt-3 fw-semibold">
+            <i class="bi bi-lightning-charge me-2"></i> Ajukan Pengujian
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
