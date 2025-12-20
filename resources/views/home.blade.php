@@ -73,7 +73,7 @@
 </head>
 <body>
 <!-- 🔹 HERO SECTION -->
-<section class="hero-section text-white d-flex align-items-center justify-content-center text-center">
+<section class="hero-section hero-lift text-white d-flex align-items-start justify-content-center text-center">
   <div class="container py-5">
     <div class="row justify-content-center">
       <div class="col-md-7">
