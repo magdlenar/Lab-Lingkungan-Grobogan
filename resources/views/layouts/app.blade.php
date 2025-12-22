@@ -233,7 +233,7 @@
                         <h6 class="text-uppercase fw-bold" style="color: #189e1e;">Kontak Kami</h6>
                         <ul class="list-unstyled mb-0">
                             <li class="d-flex align-items-start mb-3">
-                                <a href="https://maps.app.goo.gl/o9crZ8h6McybtM1F7" class="text-dark text-decoration-none social-link">
+                                <a href="https://maps.app.goo.gl/JkNfx23VB83vvJ6AA" class="text-dark text-decoration-none social-link">
                                     <i class="bi bi-geo-alt-fill me-3 fs-5" style="color: #189e1e;"></i>
                                     <span class="text-dark" style="line-height: 1.6;">
                                         Simpang Utara, Purwodadi, <br>Grobogan Regency, Central Java 58111
