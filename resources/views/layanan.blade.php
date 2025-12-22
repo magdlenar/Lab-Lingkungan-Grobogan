@@ -129,7 +129,7 @@
       </div>
     
       <div class="small text-muted mt-2">
-        <i class="bi bi-envelope-check me-1"></i>Pastikan email & nomor HP aktif untuk verifikasi.
+        <i class="bi bi-envelope-check me-1"></i>Pastikan email aktif untuk verifikasi.
       </div>
     </div>
 </section>
