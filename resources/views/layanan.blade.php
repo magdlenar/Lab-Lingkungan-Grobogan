@@ -9,6 +9,39 @@
     <title>Beranda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+  .timeline-modern { position: relative; padding-left: 8px; }
+  .timeline-modern::before{
+    content:""; position:absolute; left:18px; top:6px; bottom:6px;
+    width:2px; background:#d9e8d9;
+  }
+  .t-item{ display:flex; gap:12px; position:relative; padding:10px 0; }
+  .t-badge{
+    width:34px; height:34px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    background:#eaffea; color:#14891c; border:1px solid #d9e8d9;
+    font-weight:700; flex:0 0 34px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.06);
+    position:relative; z-index:2;
+  }
+  .t-content{
+    background:#ffffff; border:1px solid #eef2f7; border-radius:16px;
+    padding:12px 14px; width:100%;
+    box-shadow: 0 10px 20px rgba(2,6,23,.04);
+  }
+  .t-title{ font-weight:700; color:#0f172a; }
+  .status-chip{
+    background:#ffffff; border:1px solid #eef2f7; border-radius:16px;
+    padding:12px 14px; box-shadow: 0 10px 20px rgba(2,6,23,.04);
+    color:#0f172a;
+  }
+  .status-chip .s-dot{
+    display:inline-block; width:10px; height:10px; border-radius:999px;
+    background:#22c55e; margin-right:8px; vertical-align:middle;
+    box-shadow: 0 0 0 4px rgba(34,197,94,.14);
+  }
+</style>
 
 </head>
 <body></body>
@@ -80,12 +113,229 @@
       <p class="text-muted mb-3" style="font-size: 0.95rem;">
         Berminat untuk melakukan pengujian kualitas air di laboratorium kami?
       </p>
-      <a href="{{ route('uji.create') }}" class="btn btn-success px-4 py-2 rounded-pill shadow-sm">
-        <i class="bi bi-clipboard-check me-2"></i>Ajukan Uji Kualitas Air
-      </a>
+    
+      <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+        <a href="{{ route('uji.create') }}" class="btn btn-success px-4 py-2 rounded-pill shadow-sm">
+          <i class="bi bi-clipboard-check me-2"></i>Ajukan Uji Kualitas Air
+        </a>
+    
+        <!-- ✅ Tombol baru: Panduan -->
+        <button type="button"
+                class="btn btn-outline-success px-4 py-2 rounded-pill shadow-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#modalPanduanUji">
+          <i class="bi bi-info-circle me-2"></i>Panduan Pengajuan Permintaan Uji
+        </button>
+      </div>
+    
+      <div class="small text-muted mt-2">
+        <i class="bi bi-envelope-check me-1"></i>Pastikan email & nomor HP aktif untuk verifikasi.
+      </div>
     </div>
-  </div>
 </section>
+      
+      <!-- ✅ MODAL: Panduan Pengajuan Permintaan Uji -->
+    <div class="modal fade" id="modalPanduanUji" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+    
+          <div class="modal-header text-white py-3"
+               style="background: linear-gradient(90deg, #189e1e 0%, #22c55e 100%);">
+            <div class="d-flex align-items-center gap-2">
+              <div class="rounded-3 d-flex align-items-center justify-content-center"
+                   style="width:42px;height:42px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);">
+                <i class="bi bi-journal-check fs-4"></i>
+              </div>
+              <div>
+                <h5 class="modal-title fw-semibold mb-0">Panduan Pengajuan Permintaan Uji</h5>
+                <div class="small" style="opacity:.9;">Ikuti langkah berikut agar pengajuan cepat diproses</div>
+              </div>
+            </div>
+    
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+    
+          <div class="modal-body p-3 p-md-4" style="background:#f8fff8;">
+            <!-- Ringkas info -->
+            <div class="alert border-0 rounded-4 mb-4"
+                 style="background:#eaffea; color:#116a18;">
+              <div class="d-flex gap-2">
+                <i class="bi bi-shield-check fs-5 mt-1"></i>
+                <div>
+                  <div class="fw-semibold">Catatan penting</div>
+                  <div class="small">
+                    Gunakan <b>email</b> dan <b>nomor HP</b> yang aktif karena kode verifikasi dikirim via email.
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Langkah 1-7 -->
+            <div class="row g-3">
+              <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4">
+                  <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <div class="fw-bold" style="color:#0f172a;">
+                        <i class="bi bi-list-ol me-2" style="color:#189e1e"></i>Urutan Pengajuan
+                      </div>
+                      <span class="badge rounded-pill"
+                            style="background:#eaffea; color:#14891c; border:1px solid #d9e8d9;">
+                        7 Langkah
+                      </span>
+                    </div>
+    
+                    <div class="timeline-modern mt-3">
+    
+                      <div class="t-item">
+                        <div class="t-badge">1</div>
+                        <div class="t-content">
+                          <div class="t-title">Klik tombol <b>Daftar</b></div>
+                          <div class="t-desc text-muted small">
+                            Pastikan <b>email</b> dan <b>nomor HP</b> aktif.
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="t-item">
+                        <div class="t-badge">2</div>
+                        <div class="t-content">
+                          <div class="t-title">Terima kode verifikasi melalui email</div>
+                          <div class="t-desc text-muted small">
+                            Cek inbox/spam bila belum masuk.
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="t-item">
+                        <div class="t-badge">3</div>
+                        <div class="t-content">
+                          <div class="t-title">Masuk menggunakan email & password terdaftar</div>
+                          <div class="t-desc text-muted small">
+                            Login setelah proses verifikasi berhasil.
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="t-item">
+                        <div class="t-badge">4</div>
+                        <div class="t-content">
+                          <div class="t-title">Pilih menu <b>Permintaan Uji</b></div>
+                          <div class="t-desc text-muted small">
+                            Klik untuk mulai mengajukan permintaan uji.
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="t-item">
+                        <div class="t-badge">5</div>
+                        <div class="t-content">
+                          <div class="t-title">Isi semua form permintaan</div>
+                          <div class="t-desc text-muted small">
+                            Mulai dari <b>Nama PIC</b> hingga <b>Surat Permohonan Uji</b>.
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="t-item">
+                        <div class="t-badge">6</div>
+                        <div class="t-content">
+                          <div class="t-title">Cek menu <b>Status Permintaan Uji</b></div>
+                          <div class="t-desc text-muted small">
+                            Status akan berubah sesuai konfirmasi Admin Laboratorium.
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="t-item">
+                        <div class="t-badge">7</div>
+                        <div class="t-content">
+                          <div class="t-title">Jika pengujian selesai, tunggu hasil uji diunggah</div>
+                          <div class="t-desc text-muted small">
+                            Admin akan upload pada menu <b>Hasil Uji</b>.
+                          </div>
+                        </div>
+                      </div>
+    
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Status a-h -->
+              <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                  <div class="card-body p-3 p-md-4">
+                    <div class="fw-bold mb-2" style="color:#0f172a;">
+                      <i class="bi bi-arrow-repeat me-2" style="color:#189e1e"></i>Alur Status Permintaan Uji
+                    </div>
+                    <div class="small text-muted mb-3">
+                      Status akan berubah mengikuti proses verifikasi & pengerjaan.
+                    </div>
+    
+                    <div class="d-grid gap-2">
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>a.</b>&nbsp;Pemeriksaan kelengkapan
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>b.</b>&nbsp;Persyaratan tidak lengkap
+                        <div class="small text-muted mt-1">
+                          Akan ada aksi untuk <b>memperbaiki persyaratan</b> yang kurang lengkap.
+                        </div>
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>c.</b>&nbsp;Persyaratan lengkap
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>d.</b>&nbsp;Pengambilan sampel
+                        <div class="small text-muted mt-1">
+                          Akan menerima <b>surat tebusan</b> dari laboratorium.
+                        </div>
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>e.</b>&nbsp;Sedang dilakukan analisis
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>f.</b>&nbsp;Uji selesai
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>g.</b>&nbsp;Verifikasi hasil uji
+                      </div>
+    
+                      <div class="status-chip">
+                        <span class="s-dot"></span><b>h.</b>&nbsp;Penerbitan LHU
+                        <div class="small text-muted mt-1">
+                          LHU sudah di-upload pada menu <b>Hasil Uji</b>.
+                        </div>
+                      </div>
+                    </div>
+    
+                    <div class="mt-3 small text-muted">
+                      <i class="bi bi-info-circle me-1"></i>
+                      Jika ada kendala, silakan hubungi Admin Laboratorium.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+          </div>
+    
+          <div class="modal-footer bg-white">
+            <a href="{{ route('uji.create') }}" class="btn btn-success rounded-pill px-4">
+              <i class="bi bi-clipboard-check me-2"></i>Mulai Ajukan Uji
+            </a>
+            <button class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 <!-- ✨ Modal Penjelasan Detail -->
 <!-- Modal Sungai -->
