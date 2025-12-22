@@ -277,7 +277,7 @@
                                 </a>
                             </li>
                             <li class="d-flex align-items-center mb-2">
-                                <a href="https://www.facebook.com/DLHGrobogan/"
+                                <a href="https://www.facebook.com/share/1EaW2jc2j1/?mibextid=wwXIfr"
                                    class="text-dark text-decoration-none social-link">
                                     <i class="bi bi-facebook me-2 fs-4" style="color: #1877F2;"></i>
                                     <span>Laboratorium Lingkungan DLH Grobogan</span>
