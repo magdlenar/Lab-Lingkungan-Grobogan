@@ -1,16 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beranda</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-
+@push('styles')
 <style>
 /* ===================== ORG CHART (RAPI + NYAMBUNG) ===================== */
 /* ===== ORG CHART (match sketsa) ===== */
@@ -306,9 +296,9 @@
 }
 
 </style>
-</head>
+@endpush
 
-<body>
+@section('content')
 
 <!-- 🔹 SECTION 1: Profil Dinas -->
 <section class="py-5" style="background: linear-gradient(to bottom, #f0fff4, #ffffff);">
@@ -642,6 +632,4 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
 @endsection
